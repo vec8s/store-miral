@@ -1,36 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
-class DatabaseSeeder extends Seeder
+final class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // 1. إنشاء/جلب مستخدم تجريبي آمن ضد التكرار
-        User::firstOrCreate(
-            ['email' => 'test@example.com'],
-            [
-                'name'              => 'Test User',
-                'email_verified_at' => now(),
-                'password'          => Hash::make('password123'),
-            ]
-        );
-
-        // 2. استدعاء باقي الـ Seeders بالترتيب التسلسلي المنطقي
         $this->call([
-            ShippingMethodSeeder::class,     // طرق الشحن وسياسات التسعير
-            ProductAndCategorySeeder::class, // الأقسام، المنتجات والمتغيرات
-            InventorySeeder::class,          // كميات المخزون والمواقع
+            // Foundation
+            PermissionSeeder::class,
+            RoleSeeder::class,
+            UserSeeder::class,
+            SettingSeeder::class,
+
+            // Salla
+            SallaTokenSeeder::class,
+
+            // Catalog (synced from Salla)
+            CatalogSampleSeeder::class,
+            CouponSampleSeeder::class,
+
+            // Storefront features
+            MenuSeeder::class,
+            PageSeeder::class,
+            RedirectSeeder::class,
+
+            // Blog
+            PostCategorySeeder::class,
+            PostTagSeeder::class,
+            PostSeeder::class,
+
+            // User-generated content
+            WishlistSampleSeeder::class,
+            ReviewSampleSeeder::class,
+
+            // Operations
+            WebhookEndpointSeeder::class,
         ]);
     }
 }
