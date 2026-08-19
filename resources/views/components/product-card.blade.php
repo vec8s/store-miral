@@ -8,60 +8,67 @@
     $isNew       = $product->created_at?->gt(now()->subDays(7)) ?? false;
 @endphp
 
-<article class="card group relative" x-data="{ liked: false }">
+<article class="group relative bg-pureWhite rounded-cards overflow-hidden shadow-lift hover:shadow-deep transition-shadow duration-300" x-data="{ liked: false }">
     {{-- Badges --}}
-    <div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+    <div class="absolute top-4 start-4 z-10 flex flex-col gap-2">
         @if($isNew)
-            <span class="badge-success">جديد</span>
+            <span class="bg-pureWhite/90 backdrop-blur text-inkBlack text-caption font-medium px-3 py-1 rounded-full shadow-soft tracking-shop-meta">جديد</span>
         @endif
         @if($hasDiscount)
             @php $discountPct = (int) round((($price - $salePrice) / $price) * 100); @endphp
-            <span class="badge-danger">-{{ $discountPct }}%</span>
+            <span class="bg-pureWhite/90 backdrop-blur text-inkBlack text-caption font-medium px-3 py-1 rounded-full shadow-soft tracking-shop-meta">-{{ $discountPct }}%</span>
         @endif
     </div>
 
     {{-- Wishlist toggle --}}
     <button @click.prevent="liked = !liked"
-            class="absolute top-3 left-3 z-10 w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow-soft flex items-center justify-center transition"
+            class="absolute top-4 end-4 z-10 w-9 h-9 rounded-full bg-pureWhite/90 backdrop-blur shadow-soft flex items-center justify-center transition hover:shadow-lift"
             aria-label="إضافة للمفضلة">
-        <svg :class="liked ? 'text-red-500 fill-red-500' : 'text-gray-500'" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        <svg :class="liked ? 'fill-inkBlack' : 'fill-none'" class="w-4 h-4 text-inkBlack" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
         </svg>
     </button>
 
-    {{-- Image --}}
-    <a href="{{ route('shop.show', $product->slug ?? $product->id) }}" class="block aspect-square overflow-hidden bg-gray-50">
+    {{-- Image: zero card padding, white frame via inner 20px radius --}}
+    <a href="{{ route('shop.show', $product->slug ?? $product->id) }}" class="block aspect-square overflow-hidden p-2">
         <img src="{{ $image }}"
              alt="{{ $product->name }}"
              loading="lazy"
-             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+             class="w-full h-full object-cover rounded-inner group-hover:scale-[1.03] transition-transform duration-500">
     </a>
 
     {{-- Body --}}
-    <div class="p-4">
-        @if($product->category?->name ?? false)
-            <p class="text-xs text-gray-500 mb-1">{{ $product->category->name }}</p>
-        @endif
+    <div class="px-2 pb-3 flex flex-col gap-3">
+        <div class="px-1">
+            @if($product->category?->name ?? false)
+                <p class="text-caption text-mutedGray tracking-shop-meta mb-1">{{ $product->category->name }}</p>
+            @endif
+            <h3 class="text-body font-semibold text-inkBlack tracking-shop line-clamp-2 min-h-[2.4em]">
+                <a href="{{ route('shop.show', $product->slug ?? $product->id) }}">
+                    {{ $product->name }}
+                </a>
+            </h3>
+        </div>
 
-        <h3 class="font-semibold text-gray-900 text-sm line-clamp-2 mb-2 min-h-[2.5rem]">
-            <a href="{{ route('shop.show', $product->slug ?? $product->id) }}" class="hover:text-brand-600 transition">
-                {{ $product->name }}
-            </a>
-        </h3>
-
-        <div class="flex items-center justify-between mt-3">
+        <div class="flex items-center justify-between px-1">
             <div class="flex items-baseline gap-2">
                 @if($price !== null)
-                    <span class="text-lg font-bold text-brand-700">{{ number_format($salePrice ?? $price, 2) }} ر.س</span>
+                    <span class="text-body-lg font-semibold text-inkBlack tracking-shop-lg">{{ number_format($salePrice ?? $price, 2) }} ر.س</span>
                     @if($hasDiscount)
-                        <span class="text-xs text-gray-400 line-through">{{ number_format($price, 2) }}</span>
+                        <span class="text-body-sm text-mutedGray line-through tracking-shop-meta">{{ number_format($price, 2) }}</span>
                     @endif
                 @else
-                    <span class="text-sm text-gray-500">—</span>
+                    <span class="text-body-sm text-mutedGray tracking-shop-meta">—</span>
                 @endif
             </div>
 
-            <button class="w-9 h-9 rounded-xl bg-brand-50 hover:bg-brand-600 hover:text-white text-brand-600 flex items-center justify-center transition"
+            <button @click.prevent="$store.cart.add({
+                        id: {{ $product->id }},
+                        name: '{{ addslashes($product->name) }}',
+                        price: {{ $product->sale_price ?? $product->price ?? 0 }},
+                        thumbnail_url: '{{ $image }}'
+                    })"
+                    class="w-10 h-10 rounded-full bg-shopViolet text-white flex items-center justify-center shadow-violet-glow hover:bg-[#4527c9] active:scale-95 transition-all"
                     aria-label="أضف للسلة">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>

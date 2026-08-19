@@ -266,8 +266,8 @@ final class SallaClient implements SallaClientContract
 
     private function url(string $endpoint): string
     {
-        $base = (string) config("salla.base_url", "https://api.salla.dev/admin");
-        $ver  = (string) config("salla.api_version", "v2");
+        $base = config("salla.base_url") ?? "https://api.salla.dev/admin";
+        $ver  = config("salla.api_version") ?? "v2";
 
         return rtrim($base, "/") . "/" . $ver . "/" . ltrim($endpoint, "/");
     }

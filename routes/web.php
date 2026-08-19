@@ -136,3 +136,5 @@ Route::prefix("admin")->name("admin.")->group(function () {
         Route::post("/run", fn () => back())->name("run");
     });
 });
+
+require __DIR__ . '/settings.php';

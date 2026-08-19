@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Domains\Catalog\Enums\SyncStatus as EnumsSyncStatus;
+use App\Domains\Catalog\Models\Product;
 use App\Enums\SyncStatus;
 use Database\Factories\BrandFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -40,7 +43,7 @@ final class Brand extends Model
 
     /** @var array<string, string> */
     protected $casts = [
-        'sync_status' => SyncStatus::class,
+        'sync_status' => EnumsSyncStatus::class,
         'synced_at' => 'datetime',
     ];
 

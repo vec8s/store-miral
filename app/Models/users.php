@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Domains\Identity\Enums\UserStatus as EnumsUserStatus;
 use App\Enums\UserStatus;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Domains\Identity\Models\User as IdentityUser;
 use Illuminate\Notifications\Notifiable;
 
 /**
@@ -28,7 +29,7 @@ use Illuminate\Notifications\Notifiable;
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon|null $deleted_at
  */
-final class User extends Authenticatable
+final class User extends IdentityUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
@@ -60,18 +61,18 @@ final class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'status' => UserStatus::class,
+        'status' => EnumsUserStatus::class,
         'last_login_at' => 'datetime',
     ];
 
     public function wishlists(): HasMany
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->hasMany(\App\Domains\Wishlist\Models\Wishlist::class);
     }
 
     public function reviews(): HasMany
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(\App\Domains\Reviews\Models\Review::class);
     }
 
     public function isActive(): bool

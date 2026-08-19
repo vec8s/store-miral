@@ -2,25 +2,6 @@
 
 declare(strict_types=1);
 
-namespace App\Domains\Sync\Models;
-
-use App\Domains\Sync\Enums\SyncStatus;
-use App\Domains\Sync\Enums\SyncTrigger;
-use App\Domains\Sync\Enums\SyncType;
-use App\Shared\Models\BaseModel;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
-class SyncJob extends BaseModel
-{
-    use HasFactory;
-
-    protected $fillable = ['reference', 'resource_type', 'sync_type', 'status', 'total_items', 'processed_items', 'successful_items', 'failed_items', 'batch_size', 'attempts', 'max_attempts', 'filters', 'metadata', 'error_message', 'failure_context', 'started_at', 'completed_at', 'failed_at', 'next_retry_at', 'duration_seconds', 'triggered_by_id', 'triggered_by_type', 'triggered_by_source'];
-    protected function casts(): array { return ['sync_type' => SyncType::class, 'status' => Sync
-
-cat > app/Domains/Sync/Models/SyncJob.php << 'PHPEOF'
-<?php
-
 declare(strict_types=1);
 
 namespace App\Domains\Sync\Models;
