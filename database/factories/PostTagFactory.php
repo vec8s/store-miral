@@ -20,15 +20,15 @@ class PostTagFactory extends Factory
         $name = $this->faker->unique()->word();
 
         return [
-            "name" => $name,
-            "slug" => Str::slug($name) . "-" . $this->faker->unique()->numberBetween(1, 99999),
-            "description" => null,
-            "posts_count" => 0,
+            'name' => $name,
+            'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(1, 99999),
+            'description' => null,
+            'posts_count' => 0,
         ];
     }
 
     public function popular(int $count = 50): static
     {
-        return $this->state(fn () => ["posts_count" => $count]);
+        return $this->state(fn () => ['posts_count' => $count]);
     }
 }

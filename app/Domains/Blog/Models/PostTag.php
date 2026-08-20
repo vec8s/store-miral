@@ -13,6 +13,14 @@ class PostTag extends BaseModel
     use HasFactory;
 
     protected $fillable = ['name', 'slug', 'description', 'posts_count'];
-    protected function casts(): array { return ['posts_count' => 'integer']; }
-    public function posts(): BelongsToMany { return $this->belongsToMany(Post::class, 'post_tag'); }
+
+    protected function casts(): array
+    {
+        return ['posts_count' => 'integer'];
+    }
+
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'post_tag');
+    }
 }

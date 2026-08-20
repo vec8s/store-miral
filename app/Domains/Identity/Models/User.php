@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domains\Identity\Models;
 
+use App\Domains\Commerce\Models\Address;
+use App\Domains\Commerce\Models\Cart;
+use App\Domains\Commerce\Models\Order;
 use App\Domains\Identity\Enums\RoleCode;
+use App\Domains\Media\Models\Media;
+use App\Domains\Reviews\Models\Review;
+use App\Domains\Wishlist\Models\Wishlist;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,6 +31,8 @@ class User extends Authenticatable
 
     protected $fillable = [
         'salla_customer_id',
+        'auth_provider',
+        'auth_provider_id',
         'name',
         'email',
         'phone',
@@ -56,17 +64,32 @@ class User extends Authenticatable
 
     public function wishlists(): HasMany
     {
-        return $this->hasMany(\App\Domains\Wishlist\Models\Wishlist::class);
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function reviews(): HasMany
     {
-        return $this->hasMany(\App\Domains\Reviews\Models\Review::class);
+        return $this->hasMany(Review::class);
     }
 
     public function media(): MorphMany
     {
-        return $this->morphMany(\App\Domains\Media\Models\Media::class, 'mediable');
+        return $this->morphMany(Media::class, 'mediable');
     }
 
     public function scopeRole($query, string $code)
@@ -77,6 +100,7 @@ class User extends Authenticatable
     public function hasRole(RoleCode|string $code): bool
     {
         $needle = $code instanceof RoleCode ? $code->value : $code;
+
         return $this->relationLoaded('roles')
             ? $this->roles->contains('code', $needle)
             : $this->roles()->where('code', $needle)->exists();
@@ -88,6 +112,7 @@ class User extends Authenticatable
             fn ($c) => $c instanceof RoleCode ? $c->value : $c,
             $codes,
         );
+
         return $this->relationLoaded('roles')
             ? $this->roles->whereIn('code', $values)->isNotEmpty()
             : $this->roles()->whereIn('code', $values)->exists();
@@ -102,7 +127,7 @@ class User extends Authenticatable
                 $role->id => [
                     'assigned_at' => now(),
                     'assigned_by_id' => $assignedById,
-                ]
+                ],
             ]);
         }
     }

@@ -27,15 +27,15 @@ final class BrandsEndpoint
     /** @return array<int, BrandDTO> */
     public function search(string $query, int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("brands", [
-            "q"        => $query,
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->client->get('brands', [
+            'q' => $query,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): BrandDTO => BrandDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 }

@@ -27,15 +27,15 @@ final class CustomersEndpoint
     /** @return array<int, CustomerDTO> */
     public function search(string $query, int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("customers", [
-            "q"        => $query,
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->client->get('customers', [
+            'q' => $query,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): CustomerDTO => CustomerDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 }

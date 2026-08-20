@@ -97,7 +97,7 @@ final class MenuItemReferenceCast implements CastsAttributes
             MenuItemType::Link, MenuItemType::External => true,
         };
 
-        if (!$exists) {
+        if (! $exists) {
             throw InvalidPayloadException::forField(
                 'reference_id',
                 sprintf('Referenced %s [%d] does not exist.', $type->value, $referenceId),

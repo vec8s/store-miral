@@ -16,7 +16,19 @@ class Menu extends BaseModel
     use SoftDeletes;
 
     protected $fillable = ['name', 'slug', 'location', 'description', 'is_active'];
-    protected function casts(): array { return ['location' => MenuLocation::class, 'is_active' => 'boolean']; }
-    public function items(): HasMany { return $this->hasMany(MenuItem::class)->orderBy('sort_order'); }
-    public function scopeActive($q) { return $q->where('is_active', true); }
+
+    protected function casts(): array
+    {
+        return ['location' => MenuLocation::class, 'is_active' => 'boolean'];
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(MenuItem::class)->orderBy('sort_order');
+    }
+
+    public function scopeActive($q)
+    {
+        return $q->where('is_active', true);
+    }
 }

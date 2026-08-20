@@ -1,58 +1,47 @@
-@extends("layouts.admin")
+<x-layouts.admin title="قائمة العملاء — إدارة ميرال">
+  <div class="space-y-8">
+    
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#ececee]">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#09090b] tracking-tight">قائمة العملاء</h1>
+        <p class="text-xs text-[#71717a] mt-1">سجل المسجلين والعملاء النشطين بالمتجر</p>
+      </div>
 
-@section("title", "العملاء — لوحة التحكم")
-
-@section("content")
-<div class="space-y-6">
-    <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-900">العملاء</h1>
-        <p class="text-sm text-gray-500">{{ isset($customers) && method_exists($customers, 'total') ? $customers->total() : count($customers ?? []) }} عميل</p>
+      <a href="{{ route('admin.dashboard') }}" class="btn-ghost text-xs px-4 py-3 min-h-[44px] font-bold whitespace-nowrap">&rarr; العودة للوحة الرئيسية</a>
     </div>
 
-    <div class="card overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-right text-xs text-gray-500 uppercase">
-                    <tr>
-                        <th class="px-4 py-3">العميل</th>
-                        <th class="px-4 py-3">البريد</th>
-                        <th class="px-4 py-3">الجوال</th>
-                        <th class="px-4 py-3">الطلبات</th>
-                        <th class="px-4 py-3">إجمالي الإنفاق</th>
-                        <th class="px-4 py-3">تاريخ التسجيل</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    @forelse($customers ?? [] as $customer)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">
-                                        {{ mb_substr($customer->name ?? 'ع', 0, 1) }}
-                                    </div>
-                                    <span class="font-semibold text-gray-900">{{ $customer->name }}</span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 text-gray-600" dir="ltr">{{ $customer->email }}</td>
-                            <td class="px-4 py-3 text-gray-600" dir="ltr">{{ $customer->phone ?? "—" }}</td>
-                            <td class="px-4 py-3 font-semibold">{{ $customer->orders_count ?? 0 }}</td>
-                            <td class="px-4 py-3 font-semibold text-brand-700">{{ number_format($customer->total_spent ?? 0, 2) }} ر.س</td>
-                            <td class="px-4 py-3 text-xs text-gray-500">{{ optional($customer->created_at)->format('Y-m-d') }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-4 py-12 text-center text-gray-500">لا يوجد عملاء مسجلين</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        @if(isset($customers) && method_exists($customers, 'links'))
-            <div class="p-4 border-t border-gray-100">
-                {{ $customers->links() }}
-            </div>
-        @endif
+    <div class="card-awesomic p-6">
+      <div class="overflow-x-auto">
+        <table class="w-full text-right text-xs">
+          <thead>
+            <tr class="border-b border-[#ececee] text-[#71717a] font-bold">
+              <th class="pb-3">الاسم</th>
+              <th class="pb-3">البريد الإلكتروني</th>
+              <th class="pb-3">رقم الجوال</th>
+              <th class="pb-3">عدد الطلبات</th>
+              <th class="pb-3">إجمالي المشتريات</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#ececee]">
+            @php
+              $customersList = $customers ?? [
+                (object)['name' => 'محمد العتيبي', 'email' => 'm.otaibi@example.com', 'phone' => '+966500000000', 'ordersCount' => 3, 'totalSpent' => 1250],
+                (object)['name' => 'مرام البارقي', 'email' => 'maram@example.com', 'phone' => '+966555555555', 'ordersCount' => 2, 'totalSpent' => 840],
+              ];
+            @endphp
+            @foreach($customersList as $c)
+              <tr class="hover:bg-[#fafafa] transition">
+                <td class="py-3 font-bold text-[#09090b]">{{ data_get($c, 'name') }}</td>
+                <td class="py-3 text-[#52525b]">{{ data_get($c, 'email') }}</td>
+                <td class="py-3 text-[#52525b]">{{ data_get($c, 'phone') }}</td>
+                <td class="py-3 font-bold text-[#18181b]">{{ data_get($c, 'ordersCount', 1) }} طلبات</td>
+                <td class="py-3 font-extrabold text-[#09090b]">{{ number_format(data_get($c, 'totalSpent', 0), 2) }} <span class="currency-sar">ر.س</span></td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
     </div>
-</div>
-@endsection
+
+  </div>
+</x-layouts.admin>

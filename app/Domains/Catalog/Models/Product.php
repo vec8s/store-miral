@@ -7,6 +7,8 @@ namespace App\Domains\Catalog\Models;
 use App\Domains\Catalog\Enums\ProductStatus;
 use App\Domains\Catalog\Enums\ProductVisibility;
 use App\Domains\Catalog\Enums\SyncStatus;
+use App\Domains\Media\Models\Media;
+use App\Domains\Reviews\Models\Review;
 use App\Shared\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +22,8 @@ class Product extends BaseModel
     use SoftDeletes;
 
     protected $fillable = [
+        'salla_connection_id',
+        'salla_product_id',
         'salla_id',
         'category_id',
         'brand_id',
@@ -33,6 +37,7 @@ class Product extends BaseModel
         'visibility',
         'is_featured',
         'is_on_sale',
+        'is_available',
         'is_free_shipping',
         'requires_shipping',
         'is_taxable',
@@ -68,6 +73,7 @@ class Product extends BaseModel
             'sync_status' => SyncStatus::class,
             'is_featured' => 'boolean',
             'is_on_sale' => 'boolean',
+            'is_available' => 'boolean',
             'is_free_shipping' => 'boolean',
             'requires_shipping' => 'boolean',
             'is_taxable' => 'boolean',
@@ -119,12 +125,12 @@ class Product extends BaseModel
 
     public function media(): MorphMany
     {
-        return $this->morphMany(\App\Domains\Media\Models\Media::class, 'mediable');
+        return $this->morphMany(Media::class, 'mediable');
     }
 
     public function reviews(): HasMany
     {
-        return $this->hasMany(\App\Domains\Reviews\Models\Review::class);
+        return $this->hasMany(Review::class);
     }
 
     public function scopeVisible($query)

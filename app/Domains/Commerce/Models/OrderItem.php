@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domains\Commerce\Models;
 
+use App\Domains\Catalog\Models\Product;
+use App\Domains\Catalog\Models\ProductVariant;
 use App\Shared\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,12 +19,16 @@ class OrderItem extends BaseModel
         'order_id',
         'product_id',
         'product_variant_id',
+        'salla_connection_id',
+        'salla_product_id',
+        'salla_variant_id',
         'name',
         'sku',
         'quantity',
         'unit_price_minor',
         'total_minor',
         'options',
+        'customization',
     ];
 
     protected function casts(): array
@@ -32,6 +38,7 @@ class OrderItem extends BaseModel
             'unit_price_minor' => 'integer',
             'total_minor' => 'integer',
             'options' => 'array',
+            'customization' => 'array',
         ];
     }
 
@@ -42,11 +49,11 @@ class OrderItem extends BaseModel
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(\App\Domains\Catalog\Models\Product::class, 'product_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function variant(): BelongsTo
     {
-        return $this->belongsTo(\App\Domains\Catalog\Models\ProductVariant::class, 'product_variant_id');
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 }

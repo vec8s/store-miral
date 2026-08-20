@@ -19,45 +19,45 @@ class SettingFactory extends Factory
         $key = $this->faker->unique()->slug(2);
 
         return [
-            "group" => "general",
-            "key" => $key,
-            "value" => $this->faker->word(),
-            "type" => "string",
-            "is_public" => false,
+            'group' => 'general',
+            'key' => $key,
+            'value' => $this->faker->word(),
+            'type' => 'string',
+            'is_public' => false,
         ];
     }
 
     public function public(): static
     {
-        return $this->state(fn () => ["is_public" => true]);
+        return $this->state(fn () => ['is_public' => true]);
     }
 
     public function inGroup(string $group): static
     {
-        return $this->state(fn () => ["group" => $group]);
+        return $this->state(fn () => ['group' => $group]);
     }
 
     public function boolean(bool $value = true): static
     {
         return $this->state(fn () => [
-            "type" => "boolean",
-            "value" => $value ? "1" : "0",
+            'type' => 'boolean',
+            'value' => $value ? '1' : '0',
         ]);
     }
 
     public function integer(int $value): static
     {
         return $this->state(fn () => [
-            "type" => "integer",
-            "value" => (string) $value,
+            'type' => 'integer',
+            'value' => (string) $value,
         ]);
     }
 
     public function json(array $value): static
     {
         return $this->state(fn () => [
-            "type" => "json",
-            "value" => json_encode($value),
+            'type' => 'json',
+            'value' => json_encode($value),
         ]);
     }
 }

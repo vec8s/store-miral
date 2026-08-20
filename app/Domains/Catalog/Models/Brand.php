@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domains\Catalog\Models;
 
 use App\Domains\Catalog\Enums\SyncStatus;
+use App\Domains\Media\Models\Media;
 use App\Shared\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -53,7 +54,7 @@ class Brand extends BaseModel
 
     public function media(): MorphMany
     {
-        return $this->morphMany(\App\Domains\Media\Models\Media::class, 'mediable');
+        return $this->morphMany(Media::class, 'mediable');
     }
 
     public function scopeVisible($query)

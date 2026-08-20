@@ -1,5 +1,6 @@
 <?php
-  declare(strict_types=1);
+
+declare(strict_types=1);
 
 namespace Database\Factories;
 
@@ -30,11 +31,38 @@ class UserFactory extends Factory
         ];
     }
 
-    public function unverified(): static { return $this->state(fn () => ['email_verified_at' => null]); }
-    public function superAdmin(): static { return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::SuperAdmin)); }
-    public function admin(): static { return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Admin)); }
-    public function manager(): static { return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Manager)); }
-    public function editor(): static { return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Editor)); }
-    public function reviewer(): static { return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Reviewer)); }
-    public function customer(): static { return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Customer)); }
+    public function unverified(): static
+    {
+        return $this->state(fn () => ['email_verified_at' => null]);
+    }
+
+    public function superAdmin(): static
+    {
+        return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::SuperAdmin));
+    }
+
+    public function admin(): static
+    {
+        return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Admin));
+    }
+
+    public function manager(): static
+    {
+        return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Manager));
+    }
+
+    public function editor(): static
+    {
+        return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Editor));
+    }
+
+    public function reviewer(): static
+    {
+        return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Reviewer));
+    }
+
+    public function customer(): static
+    {
+        return $this->afterCreating(fn (User $u) => $u->assignRole(RoleCode::Customer));
+    }
 }

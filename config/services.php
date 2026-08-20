@@ -35,4 +35,28 @@ return [
         ],
     ],
 
+    'salla' => [
+        'client_id' => env('SALLA_CLIENT_ID', ''),
+        'client_secret' => env('SALLA_CLIENT_SECRET', ''),
+        'api_url' => env('SALLA_API_URL', 'https://api.salla.dev/admin/v2'),
+        'checkout_api_url' => env('SALLA_CHECKOUT_API_URL', 'https://api.salla.dev/store/v2/checkout'),
+        'auth_url' => env('SALLA_AUTH_URL', 'https://accounts.salla.sa/oauth2/token'),
+        'redirect_uri' => env('SALLA_REDIRECT_URI', ''),
+        'merchant_id' => env('SALLA_MERCHANT_ID', ''),
+        'store_identifier' => env('SALLA_STORE_IDENTIFIER', ''),
+        'webhook_secret' => env('SALLA_WEBHOOK_SECRET', ''),
+    ],
+
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID', ''),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET', ''),
+        'redirect' => env('GOOGLE_REDIRECT_URI', env('APP_URL', 'http://localhost:8000').'/auth/google/callback'),
+    ],
+
+    'apple' => [
+        'client_id' => env('APPLE_CLIENT_ID', ''),
+        'client_secret' => env('APPLE_CLIENT_SECRET', ''),
+        'redirect' => env('APPLE_REDIRECT_URI', env('APP_URL', 'http://localhost:8000').'/auth/apple/callback'),
+    ],
+
 ];

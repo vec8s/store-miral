@@ -13,10 +13,11 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class CouponFactory extends Factory
 {
     protected $model = Coupon::class;
+
     public function definition(): array
     {
         return [
-            'salla_id' => 'coupon-' . $this->faker->unique()->uuid(),
+            'salla_id' => 'coupon-'.$this->faker->unique()->uuid(),
             'code' => strtoupper($this->faker->unique()->bothify('CODE####')),
             'name' => $this->faker->words(3, true),
             'discount_type' => CouponDiscountType::Fixed,

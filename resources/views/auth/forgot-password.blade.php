@@ -1,27 +1,29 @@
-@extends("layouts.guest")
+<x-layouts.app title="نسيت كلمة المرور — ميرال">
+  <div class="container-rtl py-10 sm:py-14 flex justify-center">
+    <div class="w-full max-w-md px-4 sm:px-0">
+      <div class="card-awesomic p-6 sm:p-8">
+        <h1 class="text-2xl font-bold text-[#09090b] text-center">نسيت كلمة المرور؟ 🔒</h1>
+        <p class="text-sm text-[#71717a] text-center mt-1.5 mb-7">أدخل بريدك وسنرسل لك رابطاً لإعادة تعيين كلمة المرور</p>
 
-@section("title", "نسيت كلمة المرور — رافال")
-@section("heading", "نسيت كلمة المرور؟ 🔒")
-@section("subheading", "أدخل بريدك وسنرسل لك رابطاً لإعادة تعيين كلمة المرور")
+        @if (session("status"))
+            <div class="mb-5 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 text-sm">
+                {{ session("status") }}
+            </div>
+        @endif
 
-@section("content")
-    @if (session("status"))
-        <div class="mb-5 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 text-sm">
-            {{ session("status") }}
-        </div>
-    @endif
-
-    <form method="POST" action="/forgot-password" class="space-y-5">
-        @csrf
-        <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">البريد الإلكتروني</label>
-            <input id="email" type="email" name="email" value="{{ old("email") }}" required autofocus
-                   class="input" placeholder="you@example.com">
-        </div>
-        <button type="submit" class="btn-primary w-full py-3">إرسال رابط إعادة التعيين</button>
-    </form>
-@endsection
-
-@section("footer-link")
-    تذكّرت كلمة المرور؟ <a href="/login" class="text-brand-600 hover:text-brand-700 font-semibold">العودة لتسجيل الدخول</a>
-@endsection
+        <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
+            @csrf
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">البريد الإلكتروني</label>
+                <input id="email" type="email" name="email" value="{{ old("email") }}" required autofocus
+                       class="input-awesomic" placeholder="you@example.com">
+            </div>
+            <button type="submit" class="btn-primary w-full py-3 min-h-[44px]">إرسال رابط إعادة التعيين</button>
+        </form>
+      </div>
+      <p class="text-sm text-center text-[#52525b] mt-6">
+        تذكّرت كلمة المرور؟ <a href="{{ route('login') }}" class="text-[#ff5a00] hover:text-[#d94d00] font-semibold">العودة لتسجيل الدخول</a>
+      </p>
+    </div>
+  </div>
+</x-layouts.app>

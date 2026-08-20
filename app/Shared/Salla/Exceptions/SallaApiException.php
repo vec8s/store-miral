@@ -10,7 +10,7 @@ use Throwable;
 class SallaApiException extends Exception
 {
     /**
-     * @param array<string, mixed> $response
+     * @param  array<string, mixed>  $response
      */
     public function __construct(
         string $message,

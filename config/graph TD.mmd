@@ -1,0 +1,43 @@
+graph TD
+    %% Nodes & Styling Definitions
+    classDef primary fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#fff;
+    classDef salla fill:#00f5a0,stroke:#00d988,stroke-width:2px,color:#0f172a;
+    classDef webhook fill:#0f172a,stroke:#8b5cf6,stroke-width:2px,color:#fff;
+    classDef db fill:#334155,stroke:#94a3b8,stroke-width:1px,color:#fff;
+
+    Customer["👤 العميل<br/>Customer / Guest"] --> Storefront["🏪 Laravel Storefront<br/>واجهة المتجر"]
+
+    subgraph Storefront_Core ["Laravel Core Services"]
+        Storefront --> CatalogRead["📖 Catalog<br/>Local Read Model"]
+        Storefront --> CartLocal["🛒 Cart<br/>Session / DB"]
+        Storefront --> AuthLocal["🔐 Auth / RBAC<br/>Customer / Roles"]
+    end
+
+    CatalogRead --> Checkout["💳 Checkout<br/>• Validate Cart/Price<br/>• Live Stock Check"]
+    CartLocal --> Checkout
+    AuthLocal --> Checkout
+
+    Checkout --> SallaEngine["🚀 Salla Platform<br/>• Create Order & Totals<br/>• Payment & Shipping<br/>• Order Status & Inventory"]:::salla
+
+    SallaEngine -- "Payment / Status Events" --> SallaWebhooks["🔔 Salla Webhooks"]:::webhook
+
+    subgraph Webhook_Pipeline ["Webhook Processing Pipeline"]
+        SallaWebhooks --> Handler["⚡ Laravel Webhook Handler<br/>1. Verify Signature<br/>2. Idempotency Check<br/>3. Store Event<br/>4. Dispatch Queue Job"]:::webhook
+        Handler --> Queue["📥 Queue / Jobs"]
+    end
+
+    Queue --> OrderSync["🔄 Order Sync Job"]
+    Queue --> StockSync["📦 Stock Sync Job"]
+    Queue --> LoyaltyTrigger["🎁 Loyalty Trigger Job"]
+
+    subgraph Local_Storage ["Local State & Persistence"]
+        OrderSync --> LocalOrderDB[("🗄️ Local Order DB")]:::db
+        StockSync --> LocalCatalogDB[("🗄️ Local Catalog DB")]:::db
+        LoyaltyTrigger --> LoyaltyDB[("🗄️ Loyalty DB")]:::db
+    end
+
+    LocalOrderDB --> CustomerAccount["📱 Laravel Storefront<br/>قسم 'طلباتي / حسابي'"]
+    LocalCatalogDB --> CustomerAccount
+    LoyaltyDB --> CustomerAccount
+
+    class Storefront,Checkout,CustomerAccount primary;

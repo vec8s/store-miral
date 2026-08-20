@@ -19,19 +19,19 @@ class ReviewReplyFactory extends Factory
     public function definition(): array
     {
         return [
-            "review_id" => Review::factory(),
-            "user_id" => User::factory(),
-            "content" => $this->faker->paragraph(),
+            'review_id' => Review::factory(),
+            'user_id' => User::factory(),
+            'content' => $this->faker->paragraph(),
         ];
     }
 
     public function forReview(Review $review): static
     {
-        return $this->state(fn () => ["review_id" => $review->id]);
+        return $this->state(fn () => ['review_id' => $review->id]);
     }
 
     public function fromUser(User $user): static
     {
-        return $this->state(fn () => ["user_id" => $user->id]);
+        return $this->state(fn () => ['user_id' => $user->id]);
     }
 }

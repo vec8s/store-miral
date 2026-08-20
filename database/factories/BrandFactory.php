@@ -12,13 +12,15 @@ use Illuminate\Support\Str;
 class BrandFactory extends Factory
 {
     protected $model = Brand::class;
+
     public function definition(): array
     {
         $name = $this->faker->unique()->company();
+
         return [
-            'salla_id' => 'brand-' . $this->faker->unique()->uuid(),
+            'salla_id' => 'brand-'.$this->faker->unique()->uuid(),
             'name' => $name,
-            'slug' => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1, 99999),
+            'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(1, 99999),
             'logo_url' => $this->faker->imageUrl(300, 300),
             'description' => $this->faker->paragraph(),
             'is_visible' => true,

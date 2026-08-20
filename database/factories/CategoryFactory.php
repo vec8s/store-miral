@@ -12,14 +12,16 @@ use Illuminate\Support\Str;
 class CategoryFactory extends Factory
 {
     protected $model = Category::class;
+
     public function definition(): array
     {
         $name = $this->faker->unique()->words(2, true);
+
         return [
-            'salla_id' => 'cat-' . $this->faker->unique()->uuid(),
+            'salla_id' => 'cat-'.$this->faker->unique()->uuid(),
             'parent_id' => null,
             'name' => ucwords($name),
-            'slug' => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1, 99999),
+            'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(1, 99999),
             'description' => $this->faker->sentence(),
             'image_url' => $this->faker->imageUrl(600, 600),
             'sort_order' => 0,

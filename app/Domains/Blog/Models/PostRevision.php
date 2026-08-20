@@ -9,6 +9,7 @@ use App\Shared\Models\BaseModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -18,9 +19,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $excerpt
  * @property string|null $revision_note
  * @property int|null $editor_id
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
- *
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property-read Post $post
  * @property-read User|null $editor
  *
@@ -31,12 +31,12 @@ class PostRevision extends BaseModel
     use HasFactory;
 
     protected $fillable = [
-        "post_id",
-        "title",
-        "content",
-        "excerpt",
-        "revision_note",
-        "editor_id",
+        'post_id',
+        'title',
+        'content',
+        'excerpt',
+        'revision_note',
+        'editor_id',
     ];
 
     public function post(): BelongsTo
@@ -46,16 +46,16 @@ class PostRevision extends BaseModel
 
     public function editor(): BelongsTo
     {
-        return $this->belongsTo(User::class, "editor_id");
+        return $this->belongsTo(User::class, 'editor_id');
     }
 
     public function scopeByPost(Builder $query, int $postId): Builder
     {
-        return $query->where("post_id", $postId);
+        return $query->where('post_id', $postId);
     }
 
     public function scopeRecent(Builder $query): Builder
     {
-        return $query->orderByDesc("created_at");
+        return $query->orderByDesc('created_at');
     }
 }

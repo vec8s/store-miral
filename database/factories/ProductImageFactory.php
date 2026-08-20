@@ -20,28 +20,28 @@ class ProductImageFactory extends Factory
         $url = $this->faker->imageUrl(800, 800);
 
         return [
-            "product_id" => Product::factory(),
-            "url" => $url,
-            "thumbnail_url" => $this->faker->imageUrl(150, 150),
-            "medium_url" => $this->faker->imageUrl(400, 400),
-            "large_url" => $this->faker->imageUrl(1200, 1200),
-            "alt_text" => $this->faker->words(3, true),
-            "width" => 800,
-            "height" => 800,
-            "is_main" => false,
-            "sort_order" => $this->faker->numberBetween(0, 100),
-            "source_updated_at" => now()->toIso8601String(),
-            "synced_at" => now(),
+            'product_id' => Product::factory(),
+            'url' => $url,
+            'thumbnail_url' => $this->faker->imageUrl(150, 150),
+            'medium_url' => $this->faker->imageUrl(400, 400),
+            'large_url' => $this->faker->imageUrl(1200, 1200),
+            'alt_text' => $this->faker->words(3, true),
+            'width' => 800,
+            'height' => 800,
+            'is_main' => false,
+            'sort_order' => $this->faker->numberBetween(0, 100),
+            'source_updated_at' => now()->toIso8601String(),
+            'synced_at' => now(),
         ];
     }
 
     public function main(): static
     {
-        return $this->state(fn () => ["is_main" => true]);
+        return $this->state(fn () => ['is_main' => true]);
     }
 
     public function forProduct(Product $product): static
     {
-        return $this->state(fn () => ["product_id" => $product->id]);
+        return $this->state(fn () => ['product_id' => $product->id]);
     }
 }

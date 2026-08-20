@@ -6,18 +6,18 @@ namespace App\Shared\Enums;
 
 enum Environment: string
 {
-    case Local = "local";
-    case Testing = "testing";
-    case Staging = "staging";
-    case Production = "production";
+    case Local = 'local';
+    case Testing = 'testing';
+    case Staging = 'staging';
+    case Production = 'production';
 
     public function label(): string
     {
         return match ($this) {
-            self::Local => "Local",
-            self::Testing => "Testing",
-            self::Staging => "Staging",
-            self::Production => "Production",
+            self::Local => 'Local',
+            self::Testing => 'Testing',
+            self::Staging => 'Staging',
+            self::Production => 'Production',
         };
     }
 

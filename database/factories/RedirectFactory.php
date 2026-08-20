@@ -18,28 +18,28 @@ class RedirectFactory extends Factory
     public function definition(): array
     {
         return [
-            "source_url" => "/" . $this->faker->unique()->slug(2),
-            "target_url" => "/" . $this->faker->slug(2),
-            "status_code" => RedirectStatusCode::MovedPermanently,
-            "is_active" => true,
-            "hit_count" => 0,
-            "last_hit_at" => null,
-            "notes" => null,
+            'source_url' => '/'.$this->faker->unique()->slug(2),
+            'target_url' => '/'.$this->faker->slug(2),
+            'status_code' => RedirectStatusCode::MovedPermanently,
+            'is_active' => true,
+            'hit_count' => 0,
+            'last_hit_at' => null,
+            'notes' => null,
         ];
     }
 
     public function permanent(): static
     {
-        return $this->state(fn () => ["status_code" => RedirectStatusCode::MovedPermanently]);
+        return $this->state(fn () => ['status_code' => RedirectStatusCode::MovedPermanently]);
     }
 
     public function temporary(): static
     {
-        return $this->state(fn () => ["status_code" => RedirectStatusCode::Found]);
+        return $this->state(fn () => ['status_code' => RedirectStatusCode::Found]);
     }
 
     public function inactive(): static
     {
-        return $this->state(fn () => ["is_active" => false]);
+        return $this->state(fn () => ['is_active' => false]);
     }
 }

@@ -27,30 +27,30 @@ final class CategoriesEndpoint
     /** @return array<int, CategoryDTO> */
     public function root(int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("categories", [
-            "parent_id" => 0,
-            "page"      => $page,
-            "per_page"  => $perPage,
+        $response = $this->client->get('categories', [
+            'parent_id' => 0,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): CategoryDTO => CategoryDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
     /** @return array<int, CategoryDTO> */
     public function children(int $parentId, int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("categories", [
-            "parent_id" => $parentId,
-            "page"      => $page,
-            "per_page"  => $perPage,
+        $response = $this->client->get('categories', [
+            'parent_id' => $parentId,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): CategoryDTO => CategoryDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 }

@@ -19,33 +19,33 @@ class ProductOptionFactory extends Factory
     public function definition(): array
     {
         return [
-            "product_id" => Product::factory(),
-            "name" => $this->faker->randomElement(["Color", "Size", "Material", "Style"]),
-            "display_name" => null,
-            "type" => $this->faker->randomElement(ProductOptionType::cases()),
-            "sort_order" => $this->faker->numberBetween(0, 10),
-            "is_required" => true,
+            'product_id' => Product::factory(),
+            'name' => $this->faker->randomElement(['Color', 'Size', 'Material', 'Style']),
+            'display_name' => null,
+            'type' => $this->faker->randomElement(ProductOptionType::cases()),
+            'sort_order' => $this->faker->numberBetween(0, 10),
+            'is_required' => true,
         ];
     }
 
     public function color(): static
     {
         return $this->state(fn () => [
-            "name" => "Color",
-            "type" => ProductOptionType::Color,
+            'name' => 'Color',
+            'type' => ProductOptionType::Color,
         ]);
     }
 
     public function size(): static
     {
         return $this->state(fn () => [
-            "name" => "Size",
-            "type" => ProductOptionType::Size,
+            'name' => 'Size',
+            'type' => ProductOptionType::Size,
         ]);
     }
 
     public function forProduct(Product $product): static
     {
-        return $this->state(fn () => ["product_id" => $product->id]);
+        return $this->state(fn () => ['product_id' => $product->id]);
     }
 }

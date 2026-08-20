@@ -18,19 +18,19 @@ interface SallaClientContract
     // ------------------------------------------------------------------
 
     /**
-     * @param  array<string, mixed> $params
+     * @param  array<string, mixed>  $params
      * @return array<string, mixed>
      */
     public function get(string $endpoint, array $params = []): array;
 
     /**
-     * @param  array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function post(string $endpoint, array $data = []): array;
 
     /**
-     * @param  array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function put(string $endpoint, array $data = []): array;

@@ -16,9 +16,10 @@ class EnsureAuthenticated
     public function handle(Request $request, Closure $next): Response
     {
         // إذا لم يكن المستخدم مسجل الدخول، قم بإعادة توجيهه لصفحة الدخول
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login')->with('error', 'الرجاء تسجيل الدخول أولاً');
         }
+
         return $next($request);
     }
 }

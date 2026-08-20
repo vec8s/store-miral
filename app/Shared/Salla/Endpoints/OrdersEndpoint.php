@@ -27,46 +27,46 @@ final class OrdersEndpoint
     /** @return array<int, OrderDTO> */
     public function byCustomer(int $customerId, int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("orders", [
-            "customer_id" => $customerId,
-            "page"        => $page,
-            "per_page"    => $perPage,
+        $response = $this->client->get('orders', [
+            'customer_id' => $customerId,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): OrderDTO => OrderDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
     /** @return array<int, OrderDTO> */
     public function byStatus(string $status, int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("orders", [
-            "status"   => $status,
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->client->get('orders', [
+            'status' => $status,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): OrderDTO => OrderDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
     /** @return array<int, OrderDTO> */
     public function byDateRange(string $fromIso, string $toIso, int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("orders", [
-            "from"     => $fromIso,
-            "to"       => $toIso,
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->client->get('orders', [
+            'from' => $fromIso,
+            'to' => $toIso,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): OrderDTO => OrderDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 }

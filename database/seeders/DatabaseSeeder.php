@@ -4,45 +4,17 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Domains\Identity\Enums\RoleCode;
+use App\Domains\Identity\Models\User;
 use Illuminate\Database\Seeder;
 
 final class DatabaseSeeder extends Seeder
 {
-
-
     public function run(): void
     {
         $this->call([
             PermissionSeeder::class,
             RoleSeeder::class,
-             PermissionSeeder::class,
-            RoleSeeder::class,
-            UserSeeder::class,
-            SettingSeeder::class,
-
-            // Salla
-            SallaTokenSeeder::class,
-
-            // Catalog (synced from Salla)
-            CatalogSampleSeeder::class,
-            CouponSampleSeeder::class,
-
-            // Storefront features
-            MenuSeeder::class,
-            PageSeeder::class,
-            RedirectSeeder::class,
-
-            // Blog
-            PostCategorySeeder::class,
-            PostTagSeeder::class,
-            PostSeeder::class,
-
-            // User-generated content
-            WishlistSampleSeeder::class,
-            ReviewSampleSeeder::class,
-
-            // Operations
-            WebhookEndpointSeeder::class,
         ]);
 
         // Create standard default users for local testing
@@ -57,7 +29,7 @@ final class DatabaseSeeder extends Seeder
             $admin->assignRole(RoleCode::SuperAdmin);
 
             // Customer
-            $customer = User::create([
+            User::create([
                 'name' => 'عميل رافال',
                 'email' => 'customer@rafal.test',
                 'phone' => '+966500000002',

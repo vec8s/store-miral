@@ -15,12 +15,14 @@ use Illuminate\Support\Str;
 class PageFactory extends Factory
 {
     protected $model = Page::class;
+
     public function definition(): array
     {
         $title = $this->faker->unique()->sentence(3);
+
         return [
             'title' => rtrim($title, '.'),
-            'slug' => Str::slug($title) . '-' . $this->faker->unique()->numberBetween(1, 99999),
+            'slug' => Str::slug($title).'-'.$this->faker->unique()->numberBetween(1, 99999),
             'content' => $this->faker->paragraphs(3, true),
             'excerpt' => $this->faker->paragraph(),
             'status' => PublicationStatus::Draft,
@@ -33,5 +35,9 @@ class PageFactory extends Factory
             'sort_order' => 0,
         ];
     }
-    public function published(): static { return $this->state(fn () => ['status' => PublicationStatus::Published, 'published_at' => now()]); }
+
+    public function published(): static
+    {
+        return $this->state(fn () => ['status' => PublicationStatus::Published, 'published_at' => now()]);
+    }
 }

@@ -21,21 +21,21 @@ class MenuFactory extends Factory
         $name = $this->faker->unique()->words(2, true);
 
         return [
-            "name" => ucwords($name),
-            "slug" => Str::slug($name) . "-" . $this->faker->unique()->numberBetween(1, 99999),
-            "location" => $this->faker->randomElement(MenuLocation::cases()),
-            "description" => $this->faker->optional(0.5)->sentence(),
-            "is_active" => true,
+            'name' => ucwords($name),
+            'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(1, 99999),
+            'location' => $this->faker->randomElement(MenuLocation::cases()),
+            'description' => $this->faker->optional(0.5)->sentence(),
+            'is_active' => true,
         ];
     }
 
     public function inactive(): static
     {
-        return $this->state(fn () => ["is_active" => false]);
+        return $this->state(fn () => ['is_active' => false]);
     }
 
     public function inLocation(MenuLocation $location): static
     {
-        return $this->state(fn () => ["location" => $location]);
+        return $this->state(fn () => ['location' => $location]);
     }
 }

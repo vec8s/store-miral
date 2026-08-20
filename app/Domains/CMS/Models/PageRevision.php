@@ -9,6 +9,7 @@ use App\Shared\Models\BaseModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -18,9 +19,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property array<string,mixed>|null $custom_fields
  * @property string|null $revision_note
  * @property int|null $editor_id
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
- *
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property-read Page $page
  * @property-read User|null $editor
  *
@@ -31,18 +31,18 @@ class PageRevision extends BaseModel
     use HasFactory;
 
     protected $fillable = [
-        "page_id",
-        "title",
-        "content",
-        "custom_fields",
-        "revision_note",
-        "editor_id",
+        'page_id',
+        'title',
+        'content',
+        'custom_fields',
+        'revision_note',
+        'editor_id',
     ];
 
     protected function casts(): array
     {
         return [
-            "custom_fields" => "array",
+            'custom_fields' => 'array',
         ];
     }
 
@@ -53,16 +53,16 @@ class PageRevision extends BaseModel
 
     public function editor(): BelongsTo
     {
-        return $this->belongsTo(User::class, "editor_id");
+        return $this->belongsTo(User::class, 'editor_id');
     }
 
     public function scopeByPage(Builder $query, int $pageId): Builder
     {
-        return $query->where("page_id", $pageId);
+        return $query->where('page_id', $pageId);
     }
 
     public function scopeRecent(Builder $query): Builder
     {
-        return $query->orderByDesc("created_at");
+        return $query->orderByDesc('created_at');
     }
 }

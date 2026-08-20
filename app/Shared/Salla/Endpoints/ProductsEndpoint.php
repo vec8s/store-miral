@@ -27,45 +27,45 @@ final class ProductsEndpoint
     /** @return array<int, ProductDTO> */
     public function byCategory(int $categoryId, int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("products", [
-            "category_id" => $categoryId,
-            "page"        => $page,
-            "per_page"    => $perPage,
+        $response = $this->client->get('products', [
+            'category_id' => $categoryId,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): ProductDTO => ProductDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
     /** @return array<int, ProductDTO> */
     public function byBrand(int $brandId, int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("products", [
-            "brand_id" => $brandId,
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->client->get('products', [
+            'brand_id' => $brandId,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): ProductDTO => ProductDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
     /** @return array<int, ProductDTO> */
     public function search(string $query, int $page = 1, int $perPage = 50): array
     {
-        $response = $this->client->get("products", [
-            "q"        => $query,
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->client->get('products', [
+            'q' => $query,
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): ProductDTO => ProductDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 }

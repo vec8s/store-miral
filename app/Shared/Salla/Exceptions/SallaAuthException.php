@@ -11,7 +11,7 @@ final class SallaAuthException extends SallaApiException
         return new self(
             message: "Salla OAuth2 failure: {$message}",
             code: $status,
-            response: ["reason" => "oauth"],
+            response: ['reason' => 'oauth'],
         );
     }
 }

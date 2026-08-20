@@ -6,18 +6,18 @@ namespace App\Shared\Enums;
 
 enum WeightUnit: string
 {
-    case Gram = "g";
-    case Kilogram = "kg";
-    case Pound = "lb";
-    case Ounce = "oz";
+    case Gram = 'g';
+    case Kilogram = 'kg';
+    case Pound = 'lb';
+    case Ounce = 'oz';
 
     public function label(): string
     {
         return match ($this) {
-            self::Gram => "Gram",
-            self::Kilogram => "Kilogram",
-            self::Pound => "Pound",
-            self::Ounce => "Ounce",
+            self::Gram => 'Gram',
+            self::Kilogram => 'Kilogram',
+            self::Pound => 'Pound',
+            self::Ounce => 'Ounce',
         };
     }
 

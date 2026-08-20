@@ -27,6 +27,6 @@ enum MenuItemType: string
 
     public function requiresReference(): bool
     {
-        return !in_array($this, [self::Link, self::External], true);
+        return ! in_array($this, [self::Link, self::External], true);
     }
 }

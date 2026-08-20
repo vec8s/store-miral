@@ -36,22 +36,22 @@ final class SallaClient implements SallaClientContract
         $this->authenticator->refreshAccessToken();
 
         return [
-            "access_token" => $this->authenticator->getAccessToken(),
-            "refreshed_at" => now()->toIso8601String(),
+            'access_token' => $this->authenticator->getAccessToken(),
+            'refreshed_at' => now()->toIso8601String(),
         ];
     }
 
     /** @return array<int, ProductDTO> */
     public function getProducts(int $page = 1, int $perPage = 50): array
     {
-        $response = $this->get("products", [
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->get('products', [
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): ProductDTO => ProductDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
@@ -59,20 +59,20 @@ final class SallaClient implements SallaClientContract
     {
         $response = $this->get("products/{$id}");
 
-        return ProductDTO::fromSallaResponse($response["data"]);
+        return ProductDTO::fromSallaResponse($response['data']);
     }
 
     /** @return array<int, CategoryDTO> */
     public function getCategories(int $page = 1, int $perPage = 50): array
     {
-        $response = $this->get("categories", [
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->get('categories', [
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): CategoryDTO => CategoryDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
@@ -80,20 +80,20 @@ final class SallaClient implements SallaClientContract
     {
         $response = $this->get("categories/{$id}");
 
-        return CategoryDTO::fromSallaResponse($response["data"]);
+        return CategoryDTO::fromSallaResponse($response['data']);
     }
 
     /** @return array<int, BrandDTO> */
     public function getBrands(int $page = 1, int $perPage = 50): array
     {
-        $response = $this->get("brands", [
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->get('brands', [
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): BrandDTO => BrandDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
@@ -101,20 +101,20 @@ final class SallaClient implements SallaClientContract
     {
         $response = $this->get("brands/{$id}");
 
-        return BrandDTO::fromSallaResponse($response["data"]);
+        return BrandDTO::fromSallaResponse($response['data']);
     }
 
     /** @return array<int, OrderDTO> */
     public function getOrders(int $page = 1, int $perPage = 50): array
     {
-        $response = $this->get("orders", [
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->get('orders', [
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): OrderDTO => OrderDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
@@ -122,20 +122,20 @@ final class SallaClient implements SallaClientContract
     {
         $response = $this->get("orders/{$id}");
 
-        return OrderDTO::fromSallaResponse($response["data"]);
+        return OrderDTO::fromSallaResponse($response['data']);
     }
 
     /** @return array<int, CustomerDTO> */
     public function getCustomers(int $page = 1, int $perPage = 50): array
     {
-        $response = $this->get("customers", [
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->get('customers', [
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): CustomerDTO => CustomerDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
@@ -143,20 +143,20 @@ final class SallaClient implements SallaClientContract
     {
         $response = $this->get("customers/{$id}");
 
-        return CustomerDTO::fromSallaResponse($response["data"]);
+        return CustomerDTO::fromSallaResponse($response['data']);
     }
 
     /** @return array<int, CouponDTO> */
     public function getCoupons(int $page = 1, int $perPage = 50): array
     {
-        $response = $this->get("coupons", [
-            "page"     => $page,
-            "per_page" => $perPage,
+        $response = $this->get('coupons', [
+            'page' => $page,
+            'per_page' => $perPage,
         ]);
 
         return array_map(
             static fn (array $row): CouponDTO => CouponDTO::fromSallaResponse($row),
-            $response["data"] ?? [],
+            $response['data'] ?? [],
         );
     }
 
@@ -164,24 +164,24 @@ final class SallaClient implements SallaClientContract
     {
         $response = $this->get("coupons/{$id}");
 
-        return CouponDTO::fromSallaResponse($response["data"]);
+        return CouponDTO::fromSallaResponse($response['data']);
     }
 
     /** @return array<string, mixed> */
     public function registerWebhook(string $event, string $url): array
     {
-        return $this->post("webhooks", [
-            "event" => $event,
-            "url"   => $url,
+        return $this->post('webhooks', [
+            'event' => $event,
+            'url' => $url,
         ]);
     }
 
     /** @return array<int, array<string, mixed>> */
     public function getWebhooks(): array
     {
-        $response = $this->get("webhooks");
+        $response = $this->get('webhooks');
 
-        return $response["data"] ?? [];
+        return $response['data'] ?? [];
     }
 
     public function deleteWebhook(string $webhookId): bool
@@ -194,12 +194,12 @@ final class SallaClient implements SallaClientContract
     /** @return array{limit: int, remaining: int, reset: int} */
     public function getRateLimitStatus(): array
     {
-        $response = $this->get("rate-limit");
+        $response = $this->get('rate-limit');
 
         return [
-            "limit"     => (int) ($response["limit"] ?? 0),
-            "remaining" => (int) ($response["remaining"] ?? 0),
-            "reset"     => (int) ($response["reset"] ?? 0),
+            'limit' => (int) ($response['limit'] ?? 0),
+            'remaining' => (int) ($response['remaining'] ?? 0),
+            'reset' => (int) ($response['reset'] ?? 0),
         ];
     }
 
@@ -208,7 +208,7 @@ final class SallaClient implements SallaClientContract
     // ------------------------------------------------------------------
 
     /**
-     * @param  array<string, mixed> $params
+     * @param  array<string, mixed>  $params
      * @return array<string, mixed>
      */
     public function get(string $endpoint, array $params = []): array
@@ -219,7 +219,7 @@ final class SallaClient implements SallaClientContract
     }
 
     /**
-     * @param  array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function post(string $endpoint, array $data = []): array
@@ -230,7 +230,7 @@ final class SallaClient implements SallaClientContract
     }
 
     /**
-     * @param  array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function put(string $endpoint, array $data = []): array
@@ -250,9 +250,9 @@ final class SallaClient implements SallaClientContract
 
     private function buildRequest(): PendingRequest
     {
-        $timeout    = (int) config("salla.http.timeout", 30);
-        $retryTimes = (int) config("salla.http.retry_times", 3);
-        $retryDelay = (int) config("salla.http.retry_delay_ms", 500);
+        $timeout = (int) config('salla.http.timeout', 30);
+        $retryTimes = (int) config('salla.http.retry_times', 3);
+        $retryDelay = (int) config('salla.http.retry_delay_ms', 500);
 
         return Http::withToken($this->authenticator->getAccessToken())
             ->timeout($timeout)
@@ -266,10 +266,10 @@ final class SallaClient implements SallaClientContract
 
     private function url(string $endpoint): string
     {
-        $base = config("salla.base_url") ?? "https://api.salla.dev/admin";
-        $ver  = config("salla.api_version") ?? "v2";
+        $base = config('salla.base_url') ?? 'https://api.salla.dev/admin';
+        $ver = config('salla.api_version') ?? 'v2';
 
-        return rtrim($base, "/") . "/" . $ver . "/" . ltrim($endpoint, "/");
+        return rtrim($base, '/').'/'.$ver.'/'.ltrim($endpoint, '/');
     }
 
     /**
@@ -284,16 +284,16 @@ final class SallaClient implements SallaClientContract
             return $json;
         }
 
-        $status  = $response->status();
-        $body    = $response->json() ?? [];
-        $message = (string) ($body["message"] ?? $response->body());
+        $status = $response->status();
+        $body = $response->json() ?? [];
+        $message = (string) ($body['message'] ?? $response->body());
 
         throw match (true) {
             $status === 401 => new SallaAuthException($message, $status, $body),
             $status === 429 => new SallaRateLimitException(
                 message: $message,
                 code: $status,
-                retryAfter: (int) ($response->header("Retry-After") ?? 0),
+                retryAfter: (int) ($response->header('Retry-After') ?? 0),
                 response: $body,
             ),
             default => new SallaApiException($message, $status, $body),

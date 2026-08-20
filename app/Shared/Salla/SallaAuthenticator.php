@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Salla;
 
-use App\Domains\Sync\Models\SallaToken;
+use App\Domains\Settings\Models\SallaToken;
 use App\Shared\Salla\Exceptions\SallaAuthException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -22,7 +22,7 @@ final class SallaAuthenticator
     public function getAccessToken(): string
     {
         $cacheKey = (string) config('salla.cache.token_key');
-        $ttl      = (int) config('salla.cache.ttl');
+        $ttl = (int) config('salla.cache.ttl');
 
         $cached = Cache::get($cacheKey);
         if (is_string($cached) && $cached !== '') {
@@ -39,8 +39,8 @@ final class SallaAuthenticator
             ->firstOrFail();
 
         $response = Http::asForm()->post(self::TOKEN_URL, [
-            'grant_type'    => 'refresh_token',
-            'client_id'     => $this->clientId,
+            'grant_type' => 'refresh_token',
+            'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
             'refresh_token' => (string) $tokenRecord->refresh_token,
         ]);
@@ -55,14 +55,14 @@ final class SallaAuthenticator
         /** @var array<string, mixed> $data */
         $data = $response->json();
 
-        $accessToken  = (string) $data['access_token'];
+        $accessToken = (string) $data['access_token'];
         $refreshToken = (string) $data['refresh_token'];
-        $expiresIn    = (int) $data['expires_in'];
+        $expiresIn = (int) $data['expires_in'];
 
         $tokenRecord->update([
-            'access_token'  => $accessToken,
+            'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
-            'expires_at'    => now()->addSeconds($expiresIn),
+            'access_token_expires_at' => now()->addSeconds($expiresIn),
         ]);
 
         Cache::put(
@@ -80,11 +80,11 @@ final class SallaAuthenticator
     public function exchangeCode(string $code): array
     {
         $response = Http::asForm()->post(self::TOKEN_URL, [
-            'grant_type'    => 'authorization_code',
-            'client_id'     => $this->clientId,
+            'grant_type' => 'authorization_code',
+            'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
-            'code'          => $code,
-            'redirect_uri'  => $this->redirectUri,
+            'code' => $code,
+            'redirect_uri' => $this->redirectUri,
         ]);
 
         if (! $response->successful()) {
@@ -100,9 +100,9 @@ final class SallaAuthenticator
         SallaToken::query()->updateOrCreate(
             ['merchant_id' => (string) config('salla.merchant_id')],
             [
-                'access_token'  => (string) $data['access_token'],
+                'access_token' => (string) $data['access_token'],
                 'refresh_token' => (string) $data['refresh_token'],
-                'expires_at'    => now()->addSeconds((int) $data['expires_in']),
+                'access_token_expires_at' => now()->addSeconds((int) $data['expires_in']),
             ],
         );
 

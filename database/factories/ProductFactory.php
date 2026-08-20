@@ -14,17 +14,19 @@ use Illuminate\Support\Str;
 class ProductFactory extends Factory
 {
     protected $model = Product::class;
+
     public function definition(): array
     {
         $name = $this->faker->unique()->words(3, true);
         $price = $this->faker->numberBetween(1000, 100000);
         $onSale = $this->faker->boolean(30);
+
         return [
-            'salla_id' => 'prod-' . $this->faker->unique()->uuid(),
+            'salla_id' => 'prod-'.$this->faker->unique()->uuid(),
             'category_id' => null,
             'brand_id' => null,
             'name' => ucwords($name),
-            'slug' => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1, 99999),
+            'slug' => Str::slug($name).'-'.$this->faker->unique()->numberBetween(1, 99999),
             'description' => $this->faker->paragraph(),
             'sku' => strtoupper(Str::random(8)),
             'status' => ProductStatus::Active,
@@ -35,7 +37,7 @@ class ProductFactory extends Factory
             'requires_shipping' => true,
             'is_taxable' => true,
             'price_minor' => $price,
-            'sale_price_minor' => $onSale ? (int)($price * 0.8) : null,
+            'sale_price_minor' => $onSale ? (int) ($price * 0.8) : null,
             'currency' => 'SAR',
             'quantity' => $this->faker->numberBetween(0, 500),
             'weight' => $this->faker->randomFloat(3, 0.1, 50),
@@ -50,6 +52,14 @@ class ProductFactory extends Factory
             'sync_status' => SyncStatus::Synced->value,
         ];
     }
-    public function featured(): static { return $this->state(fn () => ['is_featured' => true]); }
-    public function onSale(): static { return $this->state(fn () => ['is_on_sale' => true]); }
+
+    public function featured(): static
+    {
+        return $this->state(fn () => ['is_featured' => true]);
+    }
+
+    public function onSale(): static
+    {
+        return $this->state(fn () => ['is_on_sale' => true]);
+    }
 }

@@ -15,6 +15,14 @@ class PostCategory extends BaseModel
     use SoftDeletes;
 
     protected $fillable = ['name', 'slug', 'description', 'sort_order', 'parent_id', 'seo_title', 'seo_description'];
-    public function posts(): HasMany { return $this->hasMany(Post::class); }
-    public function scopeRoots($q) { return $q->whereNull('parent_id'); }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function scopeRoots($q)
+    {
+        return $q->whereNull('parent_id');
+    }
 }
