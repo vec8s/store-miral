@@ -1,6 +1,6 @@
 FROM php:8.4-fpm
 
-# تثبيت متطلبات النظام ولارافيل
+# تثبيت متطلبات النظام و Node.js
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -8,7 +8,9 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip
+    unzip \
+    nodejs \
+    npm
 
 # تنظيف الكاش
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -21,12 +23,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# [1] نسخ ملفات المشروع كاملة إلى داخل الحاوية
+# نسخ ملفات المشروع كاملة
 COPY . /var/www
 
-# [2] تثبيت الاعتماديات وإعطاء الصلاحيات
+# تثبيت الاعتماديات الخاصة بـ Composer و NPM
 RUN composer install --no-interaction --optimize-autoloader --no-dev
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN npm install
+RUN npm run build
 
-# [3] أمر تشغيل خادم لارافيل المباشر بدلاً من php-fpm
-CMD php artisan serve --host 0.0.0.0 --port ${PORT:-8000}
+# إعطاء الصلاحيات اللازمة
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/public
+
+# أمر التشغيل المباشر
+CMD php artisan serve --host 0.0.0.0 --port ${PORT:-8080}
