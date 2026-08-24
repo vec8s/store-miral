@@ -21,6 +21,7 @@
     "@inertiajs/vue3": "^3.6.1",
     "@vitejs/plugin-vue": "^6.0.0",
     "alpinejs": "^3.13.0",
+    "swiper": "^14.1.0",
     "vue": "^3.5.0"
   }
 }

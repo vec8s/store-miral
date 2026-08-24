@@ -2,6 +2,8 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { Link } from "@inertiajs/vue3";
 import ProductCard from "../../Components/ProductCard.vue";
+import ProductSwiperCarousel from "../../Components/ProductSwiperCarousel.vue";
+import ReviewsCarousel from "../../Components/ReviewsCarousel.vue";
 import StoreLayout from "../../Layouts/StoreLayout.vue";
 
 defineOptions({ layout: StoreLayout });
@@ -154,28 +156,22 @@ onBeforeUnmount(() => {
             </div>
         </section>
 
-        <!-- أقسام المتجر -->
-        <section class="py-10 sm:py-16 bg-paper">
+        <!-- معرض منتجات متحرك تفاعلي (Product Swiper Coverflow Carousel) -->
+        <section class="py-10 sm:py-16 bg-paper border-b border-cloud overflow-hidden">
             <div class="container-rtl">
-                <div class="flex flex-wrap items-center justify-between gap-2 mb-8">
+                <div class="flex flex-wrap items-end justify-between gap-3 mb-6">
                     <div>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-obsidian tracking-tight">أقسام المتجر</h2>
-                        <p class="text-xs sm:text-sm text-fog mt-1">تصفّح المنتجات حسب الفئة المطلوبة</p>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ember/10 text-ember text-xs font-bold mb-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-ember animate-pulse"></span>
+                            تشكيلة مختارة
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-obsidian tracking-tight">معرض المنتجات المميزة</h2>
+                        <p class="text-xs sm:text-sm text-fog mt-1">تصفّح تشكيلات ميرال الفاخرة بحركة تفاعلية ثلاثية الأبعاد</p>
                     </div>
-                    <Link href="/categories" class="btn-neutral text-xs px-4 py-2 min-h-[44px]">عرض جميع الأقسام &rarr;</Link>
+                    <Link href="/shop" class="btn-neutral text-xs px-4 py-2 min-h-[44px]">تصفّح كل المنتجات &larr;</Link>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <Link
-                        v-for="cat in categories"
-                        :key="cat.id"
-                        :href="`/shop?category=${encodeURIComponent(cat.name)}`"
-                        class="card-awesomic p-6 hover:border-obsidian transition-all text-center group flex flex-col items-center justify-center"
-                    >
-                        <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">{{ cat.icon }}</div>
-                        <span class="font-bold text-obsidian text-sm">{{ cat.name }}</span>
-                    </Link>
-                </div>
+                <ProductSwiperCarousel :products="products" :autoplay-delay="2800" :loop="true" />
             </div>
         </section>
 
@@ -275,33 +271,19 @@ onBeforeUnmount(() => {
             </div>
         </section>
 
-        <!-- 7. آراء العملاء -->
-        <section class="py-10 sm:py-16 bg-paper">
+        <!-- 7. آراء العملاء التفاعلية (Customer Reviews Carousel) -->
+        <section class="py-10 sm:py-16 bg-paper border-b border-cloud overflow-hidden">
             <div class="container-rtl">
-                <div class="text-center max-w-xl mx-auto mb-10">
-                    <h2 class="text-2xl sm:text-3xl font-bold text-obsidian tracking-tight">آراء عملاء ميرال</h2>
-                    <p class="text-xs sm:text-sm text-fog mt-1.5">تقييمات وتجارب حقيقية لعملائنا بعد التوصيل والطلب</p>
+                <div class="text-center max-w-xl mx-auto mb-6 sm:mb-8">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 text-xs font-bold mb-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        تجارب حقيقية 100%
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-obsidian tracking-tight">آراء وتجارب عملاء ميرال</h2>
+                    <p class="text-xs sm:text-sm text-fog mt-1.5">انطباعات موثقة من زبائننا الكرام بعد استلام وتجربة طلباتهم الفاخرة</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="card-awesomic p-6">
-                        <div class="flex items-center gap-1 mb-3 text-ember text-sm">★★★★★</div>
-                        <p class="text-iron text-xs sm:text-sm leading-relaxed mb-6">"رائع جداً، الجودة فوق الممتاز والتوصيل كان سريع جداً والتغليف فخم ينفع هدية مباشرة."</p>
-                        <span class="font-bold text-obsidian text-xs block">— محمد الردادي</span>
-                    </div>
-
-                    <div class="card-awesomic p-6">
-                        <div class="flex items-center gap-1 mb-3 text-ember text-sm">★★★★★</div>
-                        <p class="text-iron text-xs sm:text-sm leading-relaxed mb-6">"يجننن ويستحق التجربة ☺️ شكراً من القلب على الفستان والهدية الرائعة والتفاصيل الجذابة."</p>
-                        <span class="font-bold text-obsidian text-xs block">— مرام البارقي</span>
-                    </div>
-
-                    <div class="card-awesomic p-6">
-                        <div class="flex items-center gap-1 mb-3 text-ember text-sm">★★★★★</div>
-                        <p class="text-iron text-xs sm:text-sm leading-relaxed mb-6">"جداً أنيقة وجميلة، والسلسلة طلعت بالواقع أحلى بكثير من الصور. شكراً ميرال 😍❤️."</p>
-                        <span class="font-bold text-obsidian text-xs block">— حسن العتيبي</span>
-                    </div>
-                </div>
+                <ReviewsCarousel :autoplay-delay="3000" :loop="true" />
             </div>
         </section>
 

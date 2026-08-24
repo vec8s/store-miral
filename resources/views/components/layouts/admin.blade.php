@@ -11,33 +11,35 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="flex flex-col min-h-full bg-[#f4f4f5] text-[#18181b]">
+<body class="flex flex-col min-h-full bg-[#f4f4f5] text-[#18181b] antialiased">
 
   <!-- Admin Main Navigation Header -->
-  <header class="bg-[#18181b] text-white border-b border-[#27272a] sticky top-0 z-40">
+  <header class="bg-[#18181b] text-white border-b border-[#27272a] sticky top-0 z-40 shadow-sm">
     <div class="container-rtl">
       <div class="flex items-center justify-between h-16 gap-3">
         
-        <div class="flex items-center gap-2 sm:gap-4 min-w-0">
-          <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 font-bold text-lg text-white whitespace-nowrap">
-            <span class="w-8 h-8 rounded-lg bg-[#ff5a00] text-white flex items-center justify-center text-sm">م</span>
-            <span class="hidden min-[420px]:inline">ميرال الإدارة</span>
-            <span class="min-[420px]:hidden">الإدارة</span>
+        <div class="flex items-center gap-3 min-w-0">
+          <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 font-bold text-lg text-white whitespace-nowrap">
+            <span class="w-8 h-8 rounded-lg bg-[#ff5a00] text-white flex items-center justify-center text-sm font-black shadow-sm">م</span>
+            <span class="font-extrabold tracking-tight">ميرال — الإدارة</span>
           </a>
-          <span class="badge-ember text-[10px] hidden sm:inline-flex">Salla Admin Panel</span>
+          <span class="text-[11px] bg-[#ff5a00]/15 text-[#ff5a00] font-semibold px-2.5 py-0.5 rounded-full border border-[#ff5a00]/30 hidden sm:inline-flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#ff5a00]"></span>
+            تكامل منصة سلة
+          </span>
         </div>
 
-        <div class="flex items-center gap-2 sm:gap-4 text-xs shrink-0">
-          <a href="{{ route('home') }}" target="_blank" class="hover:text-[#a1a1aa] flex items-center gap-1 whitespace-nowrap">
-            <span>🌐</span> <span class="hidden sm:inline">معاينة المتجر</span>
+        <div class="flex items-center gap-3 sm:gap-4 text-xs shrink-0">
+          <a href="{{ route('home') }}" target="_blank" class="text-zinc-300 hover:text-white flex items-center gap-1.5 py-2 px-3 rounded-lg hover:bg-zinc-800 transition whitespace-nowrap">
+            <span>🌐</span> <span>معاينة المتجر</span>
           </a>
           <form action="{{ route('logout') }}" method="POST">
             @csrf
-            <button type="submit" class="text-red-400 hover:text-red-300 font-bold py-2 min-h-[44px] whitespace-nowrap">
+            <button type="submit" class="text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 px-3 py-2 rounded-lg font-bold min-h-[36px] transition whitespace-nowrap">
               تسجيل الخروج
             </button>
           </form>
@@ -51,20 +53,30 @@
   <main class="flex-grow py-6 sm:py-8 bg-[#f4f4f5]">
     <div class="container-rtl">
       <!-- Top Admin Nav Tabs -->
-      <div class="flex flex-wrap gap-2 text-xs font-bold mb-6 sm:mb-8 p-1.5 bg-white border border-[#ececee] rounded-[16px]">
-        <a href="{{ route('admin.dashboard') }}" class="px-3 sm:px-4 py-3 min-h-[44px] rounded-[12px] transition flex items-center whitespace-nowrap {{ request()->routeIs('admin.dashboard') ? 'bg-[#09090b] text-white' : 'text-[#52525b] hover:bg-[#f4f4f5]' }}">📊 لوحة التحكم</a>
-        <a href="{{ route('admin.products.index') }}" class="px-3 sm:px-4 py-3 min-h-[44px] rounded-[12px] transition flex items-center whitespace-nowrap {{ request()->routeIs('admin.products.*') ? 'bg-[#09090b] text-white' : 'text-[#52525b] hover:bg-[#f4f4f5]' }}">💎 المنتجات</a>
-        <a href="{{ route('admin.orders.index') }}" class="px-3 sm:px-4 py-3 min-h-[44px] rounded-[12px] transition flex items-center whitespace-nowrap {{ request()->routeIs('admin.orders.*') ? 'bg-[#09090b] text-white' : 'text-[#52525b] hover:bg-[#f4f4f5]' }}">📦 الطلبات</a>
-        <a href="{{ route('admin.customers.index') }}" class="px-3 sm:px-4 py-3 min-h-[44px] rounded-[12px] transition flex items-center whitespace-nowrap {{ request()->routeIs('admin.customers.*') ? 'bg-[#09090b] text-white' : 'text-[#52525b] hover:bg-[#f4f4f5]' }}">👥 العملاء</a>
-        <a href="{{ route('admin.settings') }}" class="px-3 sm:px-4 py-3 min-h-[44px] rounded-[12px] transition flex items-center whitespace-nowrap {{ request()->routeIs('admin.settings') ? 'bg-[#09090b] text-white' : 'text-[#52525b] hover:bg-[#f4f4f5]' }}">⚙️ إعدادات سلة</a>
+      <div class="flex flex-wrap gap-2 text-xs font-bold mb-6 sm:mb-8 p-1.5 bg-white border border-[#ececee] rounded-[16px] shadow-sm">
+        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2.5 min-h-[40px] rounded-[12px] transition flex items-center gap-1.5 whitespace-nowrap {{ request()->routeIs('admin.dashboard') ? 'bg-[#09090b] text-white shadow-sm' : 'text-[#52525b] hover:text-[#09090b] hover:bg-[#f4f4f5]' }}">
+          <span>📊</span> لوحة التحكم
+        </a>
+        <a href="{{ route('admin.products.index') }}" class="px-4 py-2.5 min-h-[40px] rounded-[12px] transition flex items-center gap-1.5 whitespace-nowrap {{ request()->routeIs('admin.products.*') ? 'bg-[#09090b] text-white shadow-sm' : 'text-[#52525b] hover:text-[#09090b] hover:bg-[#f4f4f5]' }}">
+          <span>💎</span> المنتجات
+        </a>
+        <a href="{{ route('admin.orders.index') }}" class="px-4 py-2.5 min-h-[40px] rounded-[12px] transition flex items-center gap-1.5 whitespace-nowrap {{ request()->routeIs('admin.orders.*') ? 'bg-[#09090b] text-white shadow-sm' : 'text-[#52525b] hover:text-[#09090b] hover:bg-[#f4f4f5]' }}">
+          <span>📦</span> الطلبات
+        </a>
+        <a href="{{ route('admin.customers.index') }}" class="px-4 py-2.5 min-h-[40px] rounded-[12px] transition flex items-center gap-1.5 whitespace-nowrap {{ request()->routeIs('admin.customers.*') ? 'bg-[#09090b] text-white shadow-sm' : 'text-[#52525b] hover:text-[#09090b] hover:bg-[#f4f4f5]' }}">
+          <span>👥</span> العملاء
+        </a>
+        <a href="{{ route('admin.settings') }}" class="px-4 py-2.5 min-h-[40px] rounded-[12px] transition flex items-center gap-1.5 whitespace-nowrap {{ request()->routeIs('admin.settings') ? 'bg-[#09090b] text-white shadow-sm' : 'text-[#52525b] hover:text-[#09090b] hover:bg-[#f4f4f5]' }}">
+          <span>⚙️</span> إعدادات الربط
+        </a>
       </div>
 
       {{ $slot }}
     </div>
   </main>
 
-  <footer class="py-6 text-center text-xs text-[#71717a] border-t border-[#ececee] bg-white">
-    Laravel 13 Salla Architecture Admin Panel © 2026
+  <footer class="py-5 text-center text-xs text-[#71717a] border-t border-[#ececee] bg-white">
+    متجر ميرال — لوحة الإدارة المتكاملة مع سلة © 2026
   </footer>
 </body>
 </html>

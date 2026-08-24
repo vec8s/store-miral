@@ -46,7 +46,7 @@
     },
 
     async deleteProduct(id) {
-      if (confirm('هل أنت تأكد من حذف هذا المنتج؟')) {
+      if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
         const csrfToken = document.querySelector('meta[name=csrf-token]')?.getAttribute('content');
         await fetch('/api/admin/products/' + id, {
           method: 'DELETE',
@@ -60,20 +60,20 @@
     <!-- Admin Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#ececee]">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-[#09090b] tracking-tight">إدارة المنتجات</h1>
-        <p class="text-xs text-[#71717a] mt-1">إضافة، تعديل وحذف منتجات متجر ميرال</p>
+        <h1 class="text-2xl sm:text-3xl font-black text-[#09090b] tracking-tight">إدارة المنتجات</h1>
+        <p class="text-xs text-[#71717a] mt-1">إضافة وتعديل وحذف منتجات المتجر ومزامنة المخزون مع منصة سلة</p>
       </div>
 
-      <div class="flex flex-wrap items-center gap-3">
-        <a href="{{ route('admin.dashboard') }}" class="btn-ghost text-xs px-4 py-3 min-h-[44px] font-medium whitespace-nowrap">&rarr; العودة للوحة الرئيسية</a>
-        <button @click="showAddModal = true" class="btn-primary text-xs px-4 py-3 min-h-[44px] font-medium whitespace-nowrap">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <a href="{{ route('admin.dashboard') }}" class="btn-ghost text-xs px-4 py-2.5 min-h-[40px] font-bold whitespace-nowrap">&rarr; العودة للرئيسية</a>
+        <button @click="showAddModal = true" class="btn-primary text-xs px-4 py-2.5 min-h-[40px] font-bold whitespace-nowrap bg-[#09090b] hover:bg-[#18181b]">
           + إضافة منتج جديد
         </button>
       </div>
     </div>
 
     <!-- Salla Sync Status Banner -->
-    <div class="p-4 rounded-[16px] bg-slate-900 text-white shadow-sm border border-slate-800"
+    <div class="p-6 rounded-[24px] bg-[#18181b] text-white shadow-md border border-[#27272a]"
          x-data="{
            syncing: false,
            errorMessage: '',
@@ -105,28 +105,28 @@
            }
          }">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-          <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-lg">
+        <div class="flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xl">
             📦
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <h3 class="font-extrabold text-xs sm:text-sm text-white">مزامنة المخزون مع منصة سلة Salla API</h3>
-              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">نشط</span>
+              <h3 class="font-extrabold text-sm sm:text-base text-white">مزامنة المخزون مع منصة سلة Salla</h3>
+              <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/30">متصل تلقائياً</span>
             </div>
-            <p class="text-[11px] text-slate-400 mt-0.5">يتم جلب المنتجات تلقائياً من حساب سلة الرسمية.</p>
+            <p class="text-xs text-zinc-300 mt-1">يتم تحديث المنتجات والأسعار والمخزون مباشرة من متجرك في سلة.</p>
           </div>
         </div>
 
         <button @click="triggerSync(1)" :disabled="syncing" 
-                class="btn-primary text-xs px-4 py-3 min-h-[44px] bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl whitespace-nowrap flex items-center gap-2 transition-all disabled:opacity-50">
-          <span x-show="!syncing">🔄 مزامنة المخزون من سلة</span>
+                class="text-xs px-5 py-3 min-h-[44px] bg-emerald-500 hover:bg-emerald-400 text-[#09090b] font-black rounded-xl whitespace-nowrap flex items-center gap-2 transition-all disabled:opacity-50 shadow-sm">
+          <span x-show="!syncing">🔄 مزامنة المخزون الآن</span>
           <span x-show="syncing" class="animate-spin">⏳</span>
           <span x-show="syncing" x-text="retryCount > 1 ? `إعادة المحاولة ${retryCount}...` : 'جاري الجلب...'"></span>
         </button>
       </div>
 
-      <div x-show="errorMessage" x-transition class="mt-3 pt-3 border-t border-slate-800 text-xs flex items-center justify-between gap-3 text-rose-300">
+      <div x-show="errorMessage" x-transition class="mt-4 pt-3 border-t border-zinc-800 text-xs flex items-center justify-between gap-3 text-rose-300">
         <div class="flex items-center gap-2">
           <span>⚠️</span>
           <span x-text="errorMessage"></span>
@@ -135,11 +135,11 @@
     </div>
 
     <!-- Products Table Card -->
-    <div class="card-awesomic p-6">
+    <div class="card-awesomic p-6 bg-white border border-[#ececee] shadow-sm">
       <div class="overflow-x-auto">
         <table class="w-full text-right text-xs">
           <thead>
-            <tr class="border-b border-[#ececee] text-[#71717a] font-bold">
+            <tr class="border-b border-[#ececee] text-[#71717a] font-bold text-[13px]">
               <th class="pb-3">المنتج</th>
               <th class="pb-3">القسم</th>
               <th class="pb-3">السعر الأصلي</th>
@@ -160,18 +160,22 @@
                 $thumbnail = data_get($p, 'thumbnail_url');
               @endphp
               <tr class="hover:bg-[#fafafa] transition">
-                <td class="py-3 flex items-center gap-3">
-                  <img src="{{ $thumbnail }}" alt="" class="w-10 h-10 rounded-[10px] object-cover bg-[#f4f4f5] border border-[#ececee]">
-                  <a href="{{ route('shop.show', $id) }}" class="font-bold text-[#09090b] hover:underline">{{ $name }}</a>
+                <td class="py-4 flex items-center gap-3">
+                  <img src="{{ $thumbnail }}" alt="" class="w-12 h-12 rounded-[14px] object-cover bg-[#f4f4f5] border border-[#ececee] shadow-xs">
+                  <a href="{{ route('shop.show', $id) }}" class="font-bold text-sm text-[#09090b] hover:text-[#ff5a00] transition">{{ $name }}</a>
                 </td>
-                <td class="py-3 text-[#52525b]">{{ $categoryName }}</td>
-                <td class="py-3 font-bold text-[#09090b]">{{ number_format($price, 2) }} <span class="currency-sar">ر.س</span></td>
-                <td class="py-3 font-bold text-[#ff5a00]">{{ $salePrice ? number_format($salePrice, 2) . ' ر.س' : '—' }}</td>
-                <td class="py-3"><span class="badge-tag">{{ $stock }} قطعة</span></td>
-                <td class="py-3 text-center">
+                <td class="py-4 text-[#52525b] font-medium">{{ $categoryName }}</td>
+                <td class="py-4 font-black text-sm text-[#09090b]">{{ number_format($price, 2) }} <span class="currency-sar text-xs font-bold text-[#71717a]">ر.س</span></td>
+                <td class="py-4 font-black text-sm text-[#ff5a00]">{{ $salePrice ? number_format($salePrice, 2) . ' ر.س' : '—' }}</td>
+                <td class="py-4">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#f4f4f5] text-[#18181b] border border-[#ececee]">
+                    {{ $stock }} قطعة
+                  </span>
+                </td>
+                <td class="py-4 text-center">
                   <div class="flex items-center justify-center gap-2">
-                    <button @click="openEditModal({{ json_encode($p) }})" class="btn-ghost text-xs px-2.5 py-3 min-h-[44px] text-[#09090b] font-bold">تعديل ✏️</button>
-                    <button @click="deleteProduct({{ $id }})" class="btn-ghost text-xs px-2.5 py-3 min-h-[44px] text-red-600 hover:bg-red-50 font-bold">حذف 🗑️</button>
+                    <button @click="openEditModal({{ json_encode($p) }})" class="btn-ghost text-xs px-3 py-2 min-h-[38px] text-[#09090b] font-bold rounded-xl">تعديل ✏️</button>
+                    <button @click="deleteProduct({{ $id }})" class="text-xs px-3 py-2 min-h-[38px] text-rose-600 hover:bg-rose-50 font-bold rounded-xl transition">حذف 🗑️</button>
                   </div>
                 </td>
               </tr>
@@ -238,6 +242,7 @@
         </form>
       </div>
     </div>
+  </div>
 
     <!-- Edit Product Modal -->
     <div x-show="showEditModal" x-transition x-cloak class="fixed inset-0 z-50 bg-[#09090b]/60 backdrop-blur-sm overflow-y-auto">
@@ -296,6 +301,7 @@
         </form>
       </div>
     </div>
+  </div>
 
   </div>
 </x-layouts.admin>
