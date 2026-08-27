@@ -1,0 +1,174 @@
+{
+  "_ProductCard-CNHFZlcH.js": {
+    "file": "assets/ProductCard-CNHFZlcH.js",
+    "name": "ProductCard",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_StoreLayout-DBqvpH23.js": {
+    "file": "assets/StoreLayout-DBqvpH23.js",
+    "name": "StoreLayout",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-Dcdtf00p.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/Pages/Customer/About.vue": {
+    "file": "assets/About-D52YR58j.js",
+    "name": "About",
+    "src": "resources/js/Pages/Customer/About.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Account.vue": {
+    "file": "assets/Account-Dr1OrCKO.js",
+    "name": "Account",
+    "src": "resources/js/Pages/Customer/Account.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Cart.vue": {
+    "file": "assets/Cart-Cy1qmDaj.js",
+    "name": "Cart",
+    "src": "resources/js/Pages/Customer/Cart.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Categories.vue": {
+    "file": "assets/Categories-DHnFtGUV.js",
+    "name": "Categories",
+    "src": "resources/js/Pages/Customer/Categories.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Checkout.vue": {
+    "file": "assets/Checkout-Dsq22ETj.js",
+    "name": "Checkout",
+    "src": "resources/js/Pages/Customer/Checkout.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Contact.vue": {
+    "file": "assets/Contact-BGFtJPDJ.js",
+    "name": "Contact",
+    "src": "resources/js/Pages/Customer/Contact.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Home.vue": {
+    "file": "assets/Home-BVJkp3U9.js",
+    "name": "Home",
+    "src": "resources/js/Pages/Customer/Home.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js",
+      "_ProductCard-CNHFZlcH.js"
+    ],
+    "css": [
+      "assets/Home-IPtP3jMe.css"
+    ]
+  },
+  "resources/js/Pages/Customer/OrderDetail.vue": {
+    "file": "assets/OrderDetail-C8rCha81.js",
+    "name": "OrderDetail",
+    "src": "resources/js/Pages/Customer/OrderDetail.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Orders.vue": {
+    "file": "assets/Orders-DKGdDov_.js",
+    "name": "Orders",
+    "src": "resources/js/Pages/Customer/Orders.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Product.vue": {
+    "file": "assets/Product-8cMGCpZ-.js",
+    "name": "Product",
+    "src": "resources/js/Pages/Customer/Product.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Shop.vue": {
+    "file": "assets/Shop-CJqqbpv4.js",
+    "name": "Shop",
+    "src": "resources/js/Pages/Customer/Shop.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js",
+      "_ProductCard-CNHFZlcH.js"
+    ]
+  },
+  "resources/js/Pages/Customer/Wishlist.vue": {
+    "file": "assets/Wishlist-BLfMiXdU.js",
+    "name": "Wishlist",
+    "src": "resources/js/Pages/Customer/Wishlist.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_StoreLayout-DBqvpH23.js",
+      "_ProductCard-CNHFZlcH.js"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-D92C4222.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/Pages/Customer/About.vue",
+      "resources/js/Pages/Customer/Account.vue",
+      "resources/js/Pages/Customer/Cart.vue",
+      "resources/js/Pages/Customer/Categories.vue",
+      "resources/js/Pages/Customer/Checkout.vue",
+      "resources/js/Pages/Customer/Contact.vue",
+      "resources/js/Pages/Customer/Home.vue",
+      "resources/js/Pages/Customer/OrderDetail.vue",
+      "resources/js/Pages/Customer/Orders.vue",
+      "resources/js/Pages/Customer/Product.vue",
+      "resources/js/Pages/Customer/Shop.vue",
+      "resources/js/Pages/Customer/Wishlist.vue"
+    ],
+    "css": [
+      "assets/app-Dcdtf00p.css"
+    ]
+  }
+}
