@@ -21,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
             SecurityHeaders::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/salla',
+        ]);
+
         $middleware->alias([
             'product.id' => ValidateProductId::class,
         ]);

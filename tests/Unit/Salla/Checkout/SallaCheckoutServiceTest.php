@@ -72,7 +72,7 @@ class SallaCheckoutServiceTest extends TestCase
         $this->assertNotNull($session->uuid);
         $this->assertNotNull($session->idempotency_key);
         $this->assertNotNull($session->expires_at);
-        $this->assertSame(['subtotal' => 121800, 'total' => 121800], $session->amount_snapshot);
+        $this->assertEquals(['subtotal' => 121800, 'total' => 121800], $session->amount_snapshot);
     }
 
     public function test_marks_session_failed_when_api_unavailable(): void

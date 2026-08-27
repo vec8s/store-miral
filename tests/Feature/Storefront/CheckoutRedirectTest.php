@@ -13,8 +13,16 @@ class CheckoutRedirectTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    }
+
     public function test_online_payment_redirects_to_salla_checkout_when_available(): void
     {
+        $this->withoutMiddleware();
+
         Http::fake([
             'https://api.salla.dev/store/v2/checkout' => Http::response([
                 'data' => ['checkout_url' => 'https://checkout.salla.sa/abc', 'cart_id' => 'CART-1'],

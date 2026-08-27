@@ -121,7 +121,7 @@ final class OrderSyncService
             'currency' => $order->currency,
             'items_json' => $order->items()->get()->toArray(),
             'payments_json' => isset($raw['payments']) ? (array) $raw['payments'] : null,
-            'raw_payload_compressed' => gzcompress(json_encode($raw) ?: '[]') ?: null,
+            'raw_payload_compressed' => ($compressed = gzcompress(json_encode($raw) ?: '[]')) !== false ? base64_encode($compressed) : null,
             'captured_at' => now(),
         ]);
     }
