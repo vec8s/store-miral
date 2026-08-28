@@ -28,8 +28,7 @@ class AppServiceProvider extends ServiceProvider
 
 public function boot(): void
 {
-    // تشغيل forceScheme فقط عند وجود طلب HTTP حقيقي وليس أثناء Artisan Commands
-    if (!App::runningInConsole() && config('app.env') === 'production') {
+    if (!App::runningInConsole() && $this->app->environment('production')) {
         URL::forceScheme('https');
     }
 }
