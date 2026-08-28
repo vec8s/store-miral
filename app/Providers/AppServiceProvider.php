@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,13 +26,15 @@ class AppServiceProvider extends ServiceProvider
 
 
 
-
 public function boot(): void
 {
-    if (config('app.env') === 'production' || request()->header('X-Forwarded-Proto') === 'https') {
+    // تشغيل forceScheme فقط عند وجود طلب HTTP حقيقي وليس أثناء Artisan Commands
+    if (!App::runningInConsole() && config('app.env') === 'production') {
         URL::forceScheme('https');
     }
 }
+
+
     /**
      * Configure default behaviors for production-ready applications.
      */
