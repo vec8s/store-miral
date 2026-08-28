@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,10 +22,14 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        $this->configureDefaults();
+
+
+public function boot(): void
+{
+    if (config('app.env') !== 'local' || request()->header('X-Forwarded-Proto') === 'https') {
+        URL::forceScheme('https');
     }
+}
 
     /**
      * Configure default behaviors for production-ready applications.
