@@ -149,6 +149,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/connect', [SallaOAuthController::class, 'connect'])->name('connect');
         Route::get('/callback', [SallaOAuthController::class, 'callback'])->name('callback');
     });
+
+    Route::get('/migrate', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'تم إنشاء وتحديث كافة جداول قاعدة البيانات بنجاح!',
+                'output' => \Illuminate\Support\Facades\Artisan::output(),
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    })->name('migrate');
 });
 
 require __DIR__.'/settings.php';

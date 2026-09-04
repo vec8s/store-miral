@@ -63,6 +63,13 @@ class SallaOAuthController extends Controller
         }
 
         try {
+            // Ensure all database tables exist before saving tokens
+            try {
+                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            } catch (Throwable $me) {
+                Log::warning('[SallaOAuth] Auto migration check: '.$me->getMessage());
+            }
+
             $authenticator->exchangeCode($code);
 
             // Trigger initial background sync for catalog
