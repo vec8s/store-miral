@@ -19,7 +19,9 @@ class CheckoutController extends Controller
 
     public function __construct(
         protected SallaService $sallaService,
-        protected SallaCheckoutService $sallaCheckoutService
+        protected SallaCheckoutService $sallaCheckoutService,
+        protected \App\Shared\Contracts\SallaClientContract $sallaClient,
+        protected \App\Shared\Salla\Sync\OrderSyncService $orderSync
     ) {}
 
     public function index(): Response
@@ -69,8 +71,54 @@ class CheckoutController extends Controller
         $total = $subtotal + $shipping + $codFee;
 
         $orderId = rand(1000, 9999);
+        $sallaOrderId = null;
 
-        // Keep a snapshot of the order (session-based, as agreed) including gift data
+        // 1. Push order to Salla API so it appears in Salla Merchant Dashboard
+        try {
+            $sallaItems = [];
+            foreach ($cart as $cItem) {
+                $pId = data_get($cItem, 'product.id') ?: data_get($cItem, 'product.salla_id');
+                if ($pId) {
+                    $sallaItems[] = [
+                        'product_id' => (int) $pId,
+                        'quantity' => (int) data_get($cItem, 'quantity', 1),
+                    ];
+                }
+            }
+
+            if (! empty($sallaItems)) {
+                $sallaPayload = [
+                    'customer' => [
+                        'first_name' => (string) $request->input('name'),
+                        'mobile' => (string) $request->input('phone'),
+                    ],
+                    'items' => $sallaItems,
+                    'shipping_address' => [
+                        'city' => (string) $request->input('city'),
+                        'address' => (string) $request->input('address'),
+                        'country' => 'SA',
+                    ],
+                    'payment_method' => $request->input('payment_method') === 'cod' ? 'cod' : 'credit_card',
+                    'shipping_cost' => (float) $shipping,
+                    'currency' => 'SAR',
+                    'notes' => 'طلب من متجر ميرال (Headless Store)',
+                ];
+
+                $sallaRes = $this->sallaClient->post('orders', $sallaPayload);
+
+                if (isset($sallaRes['data']) && is_array($sallaRes['data'])) {
+                    $this->orderSync->syncFromSalla($sallaRes['data']);
+                    $sallaOrderId = $sallaRes['data']['id'] ?? null;
+                    if ($sallaOrderId) {
+                        $orderId = (int) $sallaOrderId;
+                    }
+                }
+            }
+        } catch (\Throwable $se) {
+            \Illuminate\Support\Facades\Log::warning('[CheckoutController] Salla order push fallback: '.$se->getMessage());
+        }
+
+        // Keep a snapshot of the order in session including gift data
         session()->put("order_$orderId", [
             'number' => '100'.$orderId,
             'total' => $total,
@@ -78,7 +126,7 @@ class CheckoutController extends Controller
             'shipping' => $shipping,
             'cod_fee' => $codFee,
             'payment_method' => $request->input('payment_method'),
-            'status' => ['value' => 'unconfirmed', 'label' => 'الطلب غير مؤكد'],
+            'status' => ['value' => 'unconfirmed', 'label' => 'الطلب قيد المعالجة'],
             'created_at' => now()->format('Y-m-d H:i'),
             'items' => array_values($cart),
             'shipping_name' => $request->input('name'),
