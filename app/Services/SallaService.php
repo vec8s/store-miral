@@ -272,7 +272,7 @@ class SallaService
     // ─── Higher-level Store Helpers ───────────────────────────────────────────
 
     /**
-     * Return products, using Salla API when available and mock data as fallback.
+     * Return products, using DB synced products, Salla API when available, and mock data as fallback.
      * Category and keyword filters are applied locally so they behave the same
      * in both the Salla and the mock fallback paths.
      *
@@ -280,10 +280,17 @@ class SallaService
      */
     public function getProducts(?string $category = null, ?string $keyword = null): array
     {
-        $products = $this->fetchProductsFromSalla(array_filter([
-            'keyword' => $keyword,
-        ]));
+        // 1. First check local database for synced Salla products
+        $products = $this->fetchProductsFromDatabase();
 
+        // 2. If DB is empty, try direct Salla API
+        if (empty($products)) {
+            $products = $this->fetchProductsFromSalla(array_filter([
+                'keyword' => $keyword,
+            ]));
+        }
+
+        // 3. Fallback to mock data if neither returns products
         if (empty($products)) {
             $products = $this->getMockProducts();
         }
@@ -306,6 +313,87 @@ class SallaService
         }
 
         return array_values($products);
+    }
+
+    /**
+     * Fetch all available products stored in the local database.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function fetchProductsFromDatabase(): array
+    {
+        try {
+            $dbProducts = \App\Domains\Catalog\Models\Product::with(['images', 'options.values', 'variants', 'category'])
+                ->where('is_available', true)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            if ($dbProducts->isEmpty()) {
+                return [];
+            }
+
+            return $dbProducts->map(fn ($p) => $this->formatDatabaseProduct($p))->all();
+        } catch (\Throwable $e) {
+            Log::warning('[SallaService] fetchProductsFromDatabase error: '.$e->getMessage());
+
+            return [];
+        }
+    }
+
+    /**
+     * Format an Eloquent Product model into the unified storefront array shape.
+     *
+     * @param  \App\Domains\Catalog\Models\Product  $p
+     * @return array<string, mixed>
+     */
+    public function formatDatabaseProduct(\App\Domains\Catalog\Models\Product $p): array
+    {
+        $images = $p->images->pluck('url')->filter()->values()->all();
+        if (empty($images) && $p->main_image_url) {
+            $images = [$p->main_image_url];
+        }
+
+        $colors = [];
+        foreach ($p->options as $option) {
+            if ($option->type?->value === 'color' || str_contains(mb_strtolower((string) $option->name), 'لون')) {
+                foreach ($option->values as $val) {
+                    $colors[] = [
+                        'name' => (string) ($val->display_value ?: $val->value),
+                        'hex' => (string) ($val->color_code ?: '#D4AF37'),
+                    ];
+                }
+            }
+        }
+
+        $fallbackImage = 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80';
+
+        return [
+            'id' => (int) ($p->salla_id ?: $p->id),
+            'name' => (string) $p->name,
+            'slug' => (string) $p->slug,
+            'sku' => (string) ($p->sku ?? ''),
+            'model' => (string) ($p->sku ?? ''),
+            'price' => (float) ($p->price_minor / 100),
+            'sale_price' => $p->sale_price_minor ? (float) ($p->sale_price_minor / 100) : null,
+            'thumbnail_url' => (string) ($p->main_image_url ?: ($images[0] ?? $fallbackImage)),
+            'images' => $images ?: [$fallbackImage],
+            'colors' => $colors ?: [
+                ['name' => 'ذهبي', 'hex' => '#D4AF37'],
+                ['name' => 'فضي', 'hex' => '#C0C0C0'],
+            ],
+            'category' => [
+                'id' => (int) ($p->category_id ?? 1),
+                'name' => (string) ($p->category?->name ?? 'مجوهرات فاخرة'),
+            ],
+            'stock' => (int) ($p->quantity ?? 10),
+            'sales_count' => (int) ($p->sold_count ?? 0),
+            'search_count' => (int) ($p->view_count ?? 0),
+            'reviews_avg_rating' => (float) ($p->average_rating ?? 5.0),
+            'reviews_count' => (int) ($p->reviews_count ?? 0),
+            'description' => (string) ($p->description ?: 'منتج فاخر من تشكيلة ميرال'),
+            'created_at' => $p->created_at?->toDateString() ?? now()->toDateString(),
+            'source' => 'salla_database',
+        ];
     }
 
     /**
@@ -360,19 +448,34 @@ class SallaService
     }
 
     /**
-     * Return a single product by ID, falling back to a mock product.
+     * Return a single product by ID, checking database, then Salla API, falling back to a mock product.
      *
      * @return array<string, mixed>
      */
     public function getProductById(int $id): array
     {
+        // 1. Check local DB first
+        try {
+            $dbProduct = \App\Domains\Catalog\Models\Product::with(['images', 'options.values', 'variants', 'category'])
+                ->where('salla_id', (string) $id)
+                ->orWhere('id', $id)
+                ->first();
+
+            if ($dbProduct !== null) {
+                return $this->formatDatabaseProduct($dbProduct);
+            }
+        } catch (\Throwable $e) {
+            // continue
+        }
+
+        // 2. Check Salla API
         $product = $this->fetchProductById($id);
 
         if ($product !== null) {
             return $product;
         }
 
-        // Return a deterministic mock product for the given ID
+        // 3. Return a deterministic mock product for the given ID
         $mockProducts = $this->getMockProducts();
 
         return $mockProducts[($id - 1) % count($mockProducts)] ?? $mockProducts[0];

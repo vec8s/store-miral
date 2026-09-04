@@ -34,9 +34,21 @@ final class SallaAuthenticator
 
     public function refreshAccessToken(): string
     {
-        $tokenRecord = SallaToken::query()
-            ->where('merchant_id', (string) config('salla.merchant_id'))
-            ->firstOrFail();
+        $merchantId = (string) config('salla.merchant_id');
+        $tokenRecord = $merchantId !== ''
+            ? SallaToken::query()->where('merchant_id', $merchantId)->first()
+            : SallaToken::query()->latest()->first();
+
+        if ($tokenRecord === null) {
+            $tokenRecord = SallaToken::query()->latest()->first();
+        }
+
+        if ($tokenRecord === null) {
+            throw SallaAuthException::fromOAuthFailure(
+                status: 401,
+                message: 'لم يتم العثور على توكن سلة في قاعدة البيانات. يرجى ربط المتجر عبر OAuth أولاً.',
+            );
+        }
 
         $response = Http::asForm()->post(self::TOKEN_URL, [
             'grant_type' => 'refresh_token',
@@ -63,6 +75,7 @@ final class SallaAuthenticator
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
             'access_token_expires_at' => now()->addSeconds($expiresIn),
+            'metadata' => $data,
         ]);
 
         Cache::put(
@@ -97,12 +110,18 @@ final class SallaAuthenticator
         /** @var array<string, mixed> $data */
         $data = $response->json();
 
+        $merchantId = (string) (config('salla.merchant_id')
+            ?: ($data['merchant_id'] ?? $data['user']['merchant']['id'] ?? $data['merchant'] ?? 'default_merchant'));
+
         SallaToken::query()->updateOrCreate(
-            ['merchant_id' => (string) config('salla.merchant_id')],
+            ['merchant_id' => $merchantId],
             [
                 'access_token' => (string) $data['access_token'],
                 'refresh_token' => (string) $data['refresh_token'],
-                'access_token_expires_at' => now()->addSeconds((int) $data['expires_in']),
+                'token_type' => (string) ($data['token_type'] ?? 'Bearer'),
+                'scope' => (string) ($data['scope'] ?? ''),
+                'access_token_expires_at' => now()->addSeconds((int) ($data['expires_in'] ?? 3600)),
+                'metadata' => $data,
             ],
         );
 
@@ -119,8 +138,11 @@ final class SallaAuthenticator
     {
         Cache::forget((string) config('salla.cache.token_key'));
 
-        SallaToken::query()
-            ->where('merchant_id', (string) config('salla.merchant_id'))
-            ->delete();
+        $merchantId = (string) config('salla.merchant_id');
+        if ($merchantId !== '') {
+            SallaToken::query()->where('merchant_id', $merchantId)->delete();
+        } else {
+            SallaToken::query()->truncate();
+        }
     }
 }

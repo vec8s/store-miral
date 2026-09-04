@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Salla\SallaOAuthController;
 use App\Http\Controllers\Salla\SallaWebhookController;
 use App\Http\Controllers\Storefront\AccountController;
 use App\Http\Controllers\Storefront\CartController;
@@ -139,13 +140,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
-    // Salla Sync
+    // Salla Sync & OAuth
     Route::prefix('sync')->name('sync.')->group(function () {
         Route::post('/run', [AdminProductController::class, 'sync'])->name('run');
+    });
+
+    Route::prefix('integrations/salla')->name('salla.')->group(function () {
+        Route::get('/connect', [SallaOAuthController::class, 'connect'])->name('connect');
+        Route::get('/callback', [SallaOAuthController::class, 'callback'])->name('callback');
     });
 });
 
 require __DIR__.'/settings.php';
+
+// ─── Salla OAuth Callback Alias ───────────────────────────────────────────────
+Route::get('/salla/callback', [SallaOAuthController::class, 'callback'])->name('salla.callback');
 
 // ─── Salla Webhook (ingress) ──────────────────────────────────────────────────
 // CSRF is skipped because Salla signs the body with HMAC-SHA256 instead of

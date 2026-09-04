@@ -138,11 +138,9 @@
 - **الدرس:** استخدام **npm فقط** (تحذير `PLUGIN_TIMINGS` من Rolldown ليس خطأ، لا حاجة لتعطيله).
 
 #### حالة Git
-- الفرع: `main` — 3 commits فقط:
-  - `a8c47a1` — "feat: complete migrations, models, and seeders setup"
-  - `890d507` — "Initial commit: Rafal store setup with Laravel and Tailwind"
-  - `c76d33d` — "2-edit"
-- يوجد ~340 ملفاً في `git status` (معدّلة/مضافة وغير ملتزم بها) — **يجب الالتزام بها بحذر عند الطلب فقط**.
+- الفرع: `main`
+- تم توثيق وحفظ التعديلات في سلسلة Commits تضم مراحل النشر وإعدادات السيرفر السحابي (Railway / Vercel)، وأمان الاتصال وحل مشكلة المحتوى المختلط (Mixed Content / HTTPS Scheme)، وبناء وتضمين أصول Inertia وVite.
+- شجرة العمل نظيفة (`working tree clean`).
 
 ### 4.2 تكامل Salla (المراحل 1–7)
 
@@ -283,12 +281,16 @@
 - الاختبارات التي تلمس قاعدة البيانات تحتاج `RefreshDatabase` (لا توجد في `tests/TestCase.php`).
 - `MockSallaClient::genericResponse` أُصلح: اسم الـ fixture = `$segments[0]` من الـ endpoint (كان يستخدم `orders/1000` كاملاً → صفوف فارغة → `Undefined array key 0`).
 
-### 4.8 النتيجة النهائية للمجموعة الكاملة (بعد تكامل الإنتاج)
-- **النتيجة: `php artisan test` → 160 اختباراً / 138 نجح / 9 فشل (كلها Auth مسبقة) / 440 assertion.**
-- اختبارات Salla (Unit) الجديدة: 91 اختباراً / 302 assertion — خضراء.
-- Feature Webhook (SallaWebhookControllerTest): 7/7.
-- Feature CheckoutRedirect: 3/3.
-- Health `/up`: 4/4 خضراء.
+### 4.9 جاهزية النشر السحابي (Railway & Vercel) وإصلاحات الاتصال والأصول الثابتة
+- **دعم النشر على Railway عبر Nixpacks (`Nixpacks.toml`):**
+  - تحديد بيئة التشغيل: `php = "8.3"`, `node = "20"`.
+  - مراحل التثبيت والبناء: `composer install --no-dev` و `npm run build`.
+  - أمر البدء: `php artisan serve --host=0.0.0.0 --port=${PORT:-8080}`.
+- **حل مشكلة المحتوى المختلط (Mixed Content) وفرض HTTPS:**
+  - في `AppServiceProvider::boot()`: فرض `URL::forceScheme('https')` للبيئة الإنتاجية `production` مع التحقق من عدم التشغيل عبر الـ Console (`!App::runningInConsole()`).
+  - في `bootstrap/app.php`: ضبط `trustProxies(at: '*')` لكافة الترويسات المعيارية (`X-Forwarded-*`) لتمرير بروتوكول HTTPS بشكل سليم خلف البروكسي العكسي لمنصات النشر السحابي.
+- **تضمين وبناء أصول الواجهة الأمامية (Inertia/Vite):**
+  - تم بناء وتضمين أصول الإنتاج في مجلد `public/build` ومطابقتها مع `manifest.json` لضمان عمل واجهات Vue/Inertia مباشرة على بيئات النشر السحابي دون الحاجة لتشغيل Vite Dev Server.
 
 ---
 
@@ -301,25 +303,26 @@
 - [x] اختبار `SallaServiceProviderTest` و `HealthEndpointTest` (4/4) و 44 اختباراً جديداً (Salla + Health) خضراء.
 - [x] تحسين استجابة 4 قوالب Blade (لوحة تحكم المتجر) مع الحفاظ على التصميم فوق sm.
 - [x] **تدقيق الاستجابة الشامل (القسم 4.4):** واجهة Vue الكاملة (13 ملفاً) + 20 قالب Blade — أهداف لمس 44px، منع تجاوز 320px، تمرير المودالات، عناوين استجابية. `npm run build` ✅ + فحص التجميع ✅.
-- [x] إنشاء `PROJECT_BRAIN.md` (هذا الملف) كمرجع أساسي.
+- [x] إنشاء `PROJECT_BRAIN.md` (هذا الملف) كمرجع أساسي وتحديثه دورياً.
 - [x] **تكامل الإنتاج الكامل (القسم 4.7):** Webhook Signature Verification + Handlers (منتجات/طلبات) + ProductSyncService + OrderSyncService + SallaCheckoutService + WebhookController (idempotency) + Jobs + دمج CheckoutController و Admin ProductController + إعفاء CSRF لمسار الويب هوك.
 - [x] **المجموعة الكاملة بعد التكامل:** 160 اختباراً / 138 نجح / 9 فشل (Auth مسبقة فقط) / 440 assertion.
 - [x] إنشاء `SALLA_SETUP_GUIDE.md` — دليل الربط التشغيلي العربي الكامل (بوابة Partners، scopes، env vars، webhooks، أحداثه الـ14، مزامنة، دورة الطلب، checklist، استكشاف الأخطاء) — موثّق من الكود الفعلي.
+- [x] **تجهيز وإصلاحات النشر السحابي (Railway / Vercel):** إعداد `Nixpacks.toml`، ضبط البروكسيات الموثوقة `trustProxies`، فرض HTTPS لتفادي Mixed Content، وتضمين أصول الإنتاج المبنية لـ Inertia/Vite.
+- [x] **المرحلة 10 وأدوات سطر الأوامر (CLI & Handover Readiness):**
+  - إنشاء أمر Artisan المخصص `php artisan salla:sync` (`app/Console/Commands/SallaSyncCommand.php`) لدعم المزامنة الشاملة للمنتجات والطلبات سحابياً ومحلياً مع شريط تقدم وتقارير.
+  - تنظيف وتوحيد ملف `.env.example` وفق معايير الأمان الموصى بها.
+  - استبدال `README.md` بالكامل بدليل تشغيلي وهندسي احترافي ثنائي اللغة خاص بـ **متجر ميرال (Miral Store)**.
+  - ربط `SallaService` مع جدول المنتجات المحلي في قاعدة البيانات (`fetchProductsFromDatabase`) مع تراجع تلقائي ذكي.
 
-### ⏳ جارٍ (In Progress)
-- [ ] **المرحلة 10:** إضافة `SALLA_DRIVER` إلى `.env.example` (تم: `auto` بدل `database`) + استبدال `README.md` (الحالي قالب AI Studio عام وغير خاص بالمشروع) + إكمال التوثيق.
+### ⏳ جارٍ / خطوة تالية (Next Step)
+- [ ] إجراء فحص البناء النهائي للأصول `npm run build` وتأكيد سلامة ملفات المشروع للتسليم المباشر.
 
-### ⬜ معلّق / مهام متبقية (Pending)
+### ⬜ معلّق / مهام اختيارية (Optional / Backlog)
 - [ ] حسم مصير `resources/views/components/navbar.blade.php` + `footer.blade.php` (قالب «رافال» القديم غير المستخدم — **لا تحذف دون إذن**).
-- [ ] إصلاح إخفاقات Auth التسعة المسبقة:
-  - إنشاء/ربط مكوّن `layouts::auth`.
-  - تعريف مسار `dashboard` أو تعديل الاختبارات.
-  - إضافة `withTwoFactor()` إلى `UserFactory`.
+- [ ] إصلاح إخفاقات Auth التسعة المسبقة (إنشاء مكوّن `layouts::auth`، تعريف مسار `dashboard`، إضافة `withTwoFactor()` إلى `UserFactory`).
 - [ ] التحقق من سبب عودة `/up` بـ 503 في env الفعلية (فحص queue/mail) وتعديل إعدادات التشغيل الحقيقية.
 - [ ] توضيح الغرض من `oneday/` و `seeders/` (فارغان) — سؤال المستخدم.
 - [ ] **التحقق الحي (بيانات اعتماد فعلية من Salla):** استجابة Checkout API الحقيقية + توقيع webhook حقيقي من Salla Dashboard — يُستكمل بعد توفير `SALLA_WEBHOOK_SECRET` و `SALLA_CHECKOUT_API_URL`.
-- [ ] توحيد اسم المتجر: `Miral Store` مقابل `Headless Store`.
-- [ ] الالتزام بـ git (حالياً ~340 ملفاً غير ملتزم) — **عند طلب المستخدم فقط**.
 
 ### 🔑 مفاتيح المراجع
 - واجهة المتجر الفعلية: `resources/js/Pages/Customer/*.vue` + `resources/js/Layouts/StoreLayout.vue` (Vue/Inertia — خارج نطاق تدقيق Blade).

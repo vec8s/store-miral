@@ -46,11 +46,19 @@
           </span>
         </div>
         
-        <button @click="syncNow()" :disabled="syncing" 
-                class="text-xs px-4 py-2.5 min-h-[40px] bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl flex items-center gap-2 disabled:opacity-50 transition-all whitespace-nowrap shadow-sm">
-          <span x-show="!syncing">🔄 مزامنة المنتجات الآن</span>
-          <span x-show="syncing" class="animate-spin">⏳</span>
-        </button>
+        <div class="flex items-center gap-2 flex-wrap">
+          <a href="{{ route('admin.salla.connect') }}" 
+             class="text-xs px-3.5 py-2.5 min-h-[40px] bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold rounded-xl flex items-center gap-1.5 transition-all whitespace-nowrap shadow-sm">
+            <span>🔑</span>
+            <span>ربط / تجديد تفويض سلة</span>
+          </a>
+
+          <button @click="syncNow()" :disabled="syncing" 
+                  class="text-xs px-4 py-2.5 min-h-[40px] bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl flex items-center gap-2 disabled:opacity-50 transition-all whitespace-nowrap shadow-sm">
+            <span x-show="!syncing">🔄 مزامنة المنتجات الآن</span>
+            <span x-show="syncing" class="animate-spin">⏳</span>
+          </button>
+        </div>
       </div>
 
       <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
@@ -96,6 +104,12 @@
     @if(session('status'))
       <div class="p-4 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
         {{ session('status') }}
+      </div>
+    @endif
+
+    @if(session('error'))
+      <div class="p-4 rounded-xl bg-rose-50 text-rose-800 border border-rose-200 text-xs font-bold">
+        {{ session('error') }}
       </div>
     @endif
 

@@ -48,23 +48,36 @@ final class SallaWebhookController
         $orderId = $this->extractOrderId($data, $eventName);
         $eventKey = hash('sha256', $rawBody);
 
-        $event = SallaWebhookEvent::firstOrCreate(
-            ['event_key' => $eventKey],
-            [
-                'event_name' => $eventName,
-                'salla_order_id' => $orderId,
-                'payload' => $data,
-                'payload_hash' => hash('sha256', json_encode($data) ?: ''),
-                'signature_valid' => true,
-                'received_at' => now(),
-            ],
-        );
+        try {
+            $event = SallaWebhookEvent::firstOrCreate(
+                ['event_key' => $eventKey],
+                [
+                    'event_name' => $eventName,
+                    'salla_order_id' => $orderId,
+                    'payload' => $data,
+                    'payload_hash' => hash('sha256', json_encode($data) ?: ''),
+                    'signature_valid' => true,
+                    'received_at' => now(),
+                ],
+            );
 
-        if ($event->wasRecentlyCreated) {
-            ProcessSallaWebhook::dispatch($event->id);
+            if ($event->wasRecentlyCreated) {
+                try {
+                    ProcessSallaWebhook::dispatch($event->id);
+                } catch (\Throwable $qe) {
+                    \Illuminate\Support\Facades\Log::warning('[SallaWebhook] Queue dispatch warning: '.$qe->getMessage());
+                }
+            }
+
+            return response()->json(['status' => 'accepted']);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('[SallaWebhook] Ingress handling exception: '.$e->getMessage());
+
+            return response()->json([
+                'status' => 'accepted',
+                'message' => 'Event received and logged.',
+            ], 200);
         }
-
-        return response()->json(['status' => 'accepted']);
     }
 
     /**
